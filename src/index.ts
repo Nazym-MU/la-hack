@@ -15,7 +15,8 @@ import {
 } from "@iwsdk/core";
 import { PanelSystem } from "./uiPanel.js";
 import { GaussianSplatLoader, GaussianSplatLoaderSystem,} from "./gaussianSplatLoader.js";
-import { spawnHologramSphere } from "./interactableExample.js";
+import { spawnMemoryObjects, MemorySystem } from "./memoryObjects.js";
+import { SEED_PALACE } from "./memories.js";
 
 
 // ------------------------------------------------------------
@@ -45,14 +46,18 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
 
     world
       .registerSystem(PanelSystem)
-      .registerSystem(GaussianSplatLoaderSystem);
+      .registerSystem(GaussianSplatLoaderSystem)
+      .registerSystem(MemorySystem);
 
 
     // ------------------------------------------------------------
-    // Gaussian Splat
+    // Gaussian Splat — the walkable world. Swap splatUrl for a Marble export.
     // ------------------------------------------------------------
     const splatEntity = world.createTransformEntity();
-    splatEntity.addComponent(GaussianSplatLoader);
+    splatEntity.addComponent(
+      GaussianSplatLoader,
+      SEED_PALACE.splatUrl ? { splatUrl: SEED_PALACE.splatUrl } : {},
+    );
 
     const splatSystem = world.getSystem(GaussianSplatLoaderSystem)!;
 
@@ -84,9 +89,9 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
 
 
     // ------------------------------------------------------------
-    // Hologram Sphere (distance-grabbable, translate in place)
+    // Memory objects — one interactable orb per Memory in the palace.
     // ------------------------------------------------------------
-    spawnHologramSphere(world);
+    spawnMemoryObjects(world);
 
 
     // ------------------------------------------------------------

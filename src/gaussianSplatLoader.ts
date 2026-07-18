@@ -87,7 +87,7 @@ export class GaussianSplatLoaderSystem extends createSystem({
       lodSplatScale: 1.0,
       behindFoveate: 0.1,
     });
-    spark.outsideFoveate = 0.3;
+    (spark as unknown as { outsideFoveate: number }).outsideFoveate = 0.3;
     spark.renderOrder = -10;
     this.world.scene.add(spark);
     this.sparkRenderer = spark;

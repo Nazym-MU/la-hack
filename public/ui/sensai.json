@@ -4,12 +4,13 @@
     "sourceTag": "div",
     "children": [
       {
-        "type": "image",
-        "sourceTag": "img",
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Mind Palace"
+        ],
         "properties": {
-          "src": "/SensAI-logo.png",
-          "alt": "SensAI",
-          "class": "logo"
+          "class": "heading"
         },
         "dataUid": "uid-2"
       },
@@ -17,7 +18,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "WebXR + SparkJS Template"
+          "Select a memory to remember"
         ],
         "properties": {
           "class": "sub-heading"
@@ -37,12 +38,25 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "sensaihack.com"
+          "A place to begin"
         ],
         "properties": {
-          "class": "event-line"
+          "id": "memory-title",
+          "class": "memory-title"
         },
         "dataUid": "uid-5"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Walk up to a glowing orb and press it to resurface the moment it holds."
+        ],
+        "properties": {
+          "id": "memory-text",
+          "class": "memory-text"
+        },
+        "dataUid": "uid-6"
       },
       {
         "sourceTag": "button",
@@ -53,7 +67,7 @@
         "properties": {
           "id": "xr-button"
         },
-        "dataUid": "uid-6"
+        "dataUid": "uid-7"
       }
     ],
     "properties": {
@@ -66,7 +80,7 @@
       "content": {
         "alignItems": "center",
         "padding": "3",
-        "width": "50",
+        "width": "55",
         "display": "flex",
         "flexDirection": "column",
         "backgroundColor": "#0d0221",
@@ -75,16 +89,17 @@
         "borderRadius": 2
       }
     },
-    "logo": {
+    "heading": {
       "content": {
-        "width": "45",
-        "height": "12",
-        "objectFit": "contain"
+        "fontSize": "3",
+        "color": "#ffffff",
+        "fontWeight": "bold",
+        "textAlign": "center"
       }
     },
     "sub-heading": {
       "content": {
-        "fontSize": "1.8",
+        "fontSize": "1.6",
         "color": "#c4b5fd",
         "textAlign": "center",
         "marginTop": "0.5"
@@ -99,12 +114,20 @@
         "backgroundColor": "#7b2ff2"
       }
     },
-    "event-line": {
+    "memory-title": {
       "content": {
-        "fontSize": "1.6",
+        "fontSize": "2.2",
         "color": "#fbbf24",
         "textAlign": "center",
-        "fontWeight": "medium"
+        "fontWeight": "bold"
+      }
+    },
+    "memory-text": {
+      "content": {
+        "fontSize": "1.5",
+        "color": "#e5e7eb",
+        "textAlign": "center",
+        "marginTop": "1"
       }
     },
     "__id__xr-button": {
@@ -116,7 +139,7 @@
         "color": "#0d0221",
         "borderRadius": 1.5,
         "borderWidth": "0",
-        "fontSize": "2.5",
+        "fontSize": "2.2",
         "fontWeight": "bold",
         "textAlign": "center",
         "cursor": "pointer"
@@ -134,113 +157,133 @@
         "column": 18
       }
     },
-    "logo": {
+    "heading": {
       "start": {
         "line": 13,
         "column": 2
       },
       "end": {
         "line": 13,
-        "column": 7
+        "column": 10
       }
     },
     "sub-heading": {
       "start": {
-        "line": 19,
+        "line": 20,
         "column": 2
       },
       "end": {
-        "line": 19,
+        "line": 20,
         "column": 14
       }
     },
     "divider": {
       "start": {
-        "line": 26,
+        "line": 27,
         "column": 2
       },
       "end": {
-        "line": 26,
+        "line": 27,
         "column": 10
       }
     },
-    "event-line": {
+    "memory-title": {
       "start": {
-        "line": 34,
+        "line": 35,
         "column": 2
       },
       "end": {
-        "line": 34,
-        "column": 13
+        "line": 35,
+        "column": 15
+      }
+    },
+    "memory-text": {
+      "start": {
+        "line": 42,
+        "column": 2
+      },
+      "end": {
+        "line": 42,
+        "column": 14
       }
     },
     "__id__xr-button": {
       "start": {
-        "line": 41,
+        "line": 49,
         "column": 2
       },
       "end": {
-        "line": 41,
+        "line": 49,
         "column": 12
       }
     },
     "uid-1": {
       "start": {
-        "line": 55,
+        "line": 63,
         "column": 0
       },
       "end": {
-        "line": 61,
+        "line": 70,
         "column": 6
       }
     },
     "uid-2": {
       "start": {
-        "line": 56,
+        "line": 64,
         "column": 2
       },
       "end": {
-        "line": 56,
-        "column": 58
+        "line": 64,
+        "column": 42
       }
     },
     "uid-3": {
       "start": {
-        "line": 57,
+        "line": 65,
         "column": 2
       },
       "end": {
-        "line": 57,
-        "column": 59
+        "line": 65,
+        "column": 62
       }
     },
     "uid-4": {
       "start": {
-        "line": 58,
+        "line": 66,
         "column": 2
       },
       "end": {
-        "line": 58,
+        "line": 66,
         "column": 29
       }
     },
     "uid-5": {
       "start": {
-        "line": 59,
+        "line": 67,
         "column": 2
       },
       "end": {
-        "line": 59,
-        "column": 48
+        "line": 67,
+        "column": 70
       }
     },
     "uid-6": {
       "start": {
-        "line": 60,
+        "line": 68,
         "column": 2
       },
       "end": {
-        "line": 60,
+        "line": 68,
+        "column": 123
+      }
+    },
+    "uid-7": {
+      "start": {
+        "line": 69,
+        "column": 2
+      },
+      "end": {
+        "line": 69,
         "column": 42
       }
     }

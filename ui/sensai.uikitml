@@ -2,7 +2,7 @@
   .panel-container {
     align-items: center;
     padding: 3;
-    width: 50;
+    width: 55;
     display: flex;
     flex-direction: column;
     background-color: #0d0221;
@@ -11,14 +11,15 @@
     border-radius: 2;
   }
 
-  .logo {
-    width: 45;
-    height: 12;
-    object-fit: contain;
+  .heading {
+    font-size: 3;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
   }
 
   .sub-heading {
-    font-size: 1.8;
+    font-size: 1.6;
     color: #c4b5fd;
     text-align: center;
     margin-top: 0.5;
@@ -32,11 +33,18 @@
     background-color: #7b2ff2;
   }
 
-  .event-line {
-    font-size: 1.6;
+  .memory-title {
+    font-size: 2.2;
     color: #fbbf24;
     text-align: center;
-    font-weight: medium;
+    font-weight: bold;
+  }
+
+  .memory-text {
+    font-size: 1.5;
+    color: #e5e7eb;
+    text-align: center;
+    margin-top: 1;
   }
 
   #xr-button {
@@ -47,16 +55,17 @@
     color: #0d0221;
     border-radius: 1.5;
     border-width: 0;
-    font-size: 2.5;
+    font-size: 2.2;
     font-weight: bold;
     text-align: center;
     cursor: pointer;
   }
 </style>
 <div class="panel-container">
-  <img src="/SensAI-logo.png" alt="SensAI" class="logo" />
-  <span class="sub-heading">WebXR + SparkJS Template</span>
+  <span class="heading">Mind Palace</span>
+  <span class="sub-heading">Select a memory to remember</span>
   <div class="divider"></div>
-  <span class="event-line">sensaihack.com</span>
+  <span id="memory-title" class="memory-title">A place to begin</span>
+  <span id="memory-text" class="memory-text">Walk up to a glowing orb and press it to resurface the moment it holds.</span>
   <button id="xr-button">Enter XR</button>
 </div>
