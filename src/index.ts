@@ -16,6 +16,7 @@ import {
 import { PanelSystem } from "./uiPanel.js";
 import { GaussianSplatLoader, GaussianSplatLoaderSystem,} from "./gaussianSplatLoader.js";
 import { spawnMemoryObjects, MemorySystem } from "./memoryObjects.js";
+import { enableDesktopControls } from "./desktopControls.js";
 import { SEED_PALACE } from "./memories.js";
 
 
@@ -92,6 +93,9 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
     // Memory objects — one interactable orb per Memory in the palace.
     // ------------------------------------------------------------
     spawnMemoryObjects(world);
+
+    // Flat-browser navigation + click picking (stands down inside XR).
+    enableDesktopControls(world);
 
 
     // ------------------------------------------------------------

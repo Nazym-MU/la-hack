@@ -28,6 +28,17 @@ export function getMemory(id: string): Memory | undefined {
   return memoryRegistry.get(id);
 }
 
+// Placed object roots, for desktop raycast picking. Each carries its memory id
+// in userData.memoryId.
+export const memoryMeshes: THREE.Object3D[] = [];
+
+// Desktop (mouse) selection funnels through here; MemorySystem drains it so the
+// panel is written in exactly one place, whatever triggered the selection.
+let requestedMemoryId: string | null = null;
+export function requestMemory(id: string): void {
+  requestedMemoryId = id;
+}
+
 const gltfLoader = new GLTFLoader();
 
 // Calm placeholder orb, used until a real TRIPO GLB is supplied.
@@ -94,6 +105,8 @@ export async function addMemoryObject(
     if (resolved.scale) object3D.scale.setScalar(resolved.scale);
   }
   object3D.position.set(...resolved.position);
+  object3D.userData.memoryId = resolved.id;
+  memoryMeshes.push(object3D);
 
   world
     .createTransformEntity(object3D)
@@ -136,6 +149,13 @@ export class MemorySystem extends createSystem({
     });
 
     this.prevPressed = nowPressed;
+
+    // Drain any desktop mouse-click selection.
+    if (requestedMemoryId) {
+      const memory = getMemory(requestedMemoryId);
+      requestedMemoryId = null;
+      if (memory) this.showMemory(memory);
+    }
   }
 
   private showMemory(memory: Memory): void {
