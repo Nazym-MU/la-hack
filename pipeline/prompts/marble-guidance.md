@@ -39,6 +39,12 @@ anchor objects**, each in its own clear spot with space around it, so the visito
 up to and select each one. These interactive elements are the point of the room.
 - **Evocative over literal.** Favour a few strong, symbolic objects and expressive light
 over a faithful, detailed copy of the real scene.
+- **Photos become pictures *inside* the room — never the room itself.** A terrace photo
+does NOT become an actual terrace or any outdoor view. It becomes a **framed photograph on
+the wall, a printed snapshot on a shelf, or a picture propped on a desk** inside a small,
+cozy interior room. The place from a photo lives on as a memento the visitor walks up to —
+never as the environment. **Always generate an enclosed interior room**; anything outdoors
+from the input appears only as images or objects within it.
 
 ## Core Principles
 
@@ -128,11 +134,13 @@ belongs to, and helps you infer time of day, era, and season for lighting.
 Group the input by entity first. Only after grouping do you write the room description
 for each group. Never mix two unrelated entities into a single room.
 
-**sourcePhoto — leave it empty by default.** Each room is built as a curated mind-space
-from your `marblePrompt` (text-to-world), NOT a literal reconstruction, so set
-`sourcePhoto` to an empty string. Only set it (to a photo's exact filename) in the rare
-case where a faithful, photographic reconstruction of that exact place is specifically
-wanted — that is the opposite of the mind-space aesthetic, so use it very sparingly.
+**sourcePhoto — ALWAYS leave it empty.** Every room is built purely from your
+`marblePrompt` (text-to-world); we never reconstruct a photo into a world. So `sourcePhoto`
+must always be an empty string. Instead, *look at* the uploaded photos, understand what
+they show, and fold that into the room's `marblePrompt` — the place and its details become
+described objects and framed pictures on the walls of a small interior room, never the
+environment. You are the eyes: describe the photos into a room, and hand World Labs only
+text.
 
 Also leave the anchor surfaces (shelves, tables, sills) mostly clear, since each memory's
 object is later dropped onto them as a real 3D token the user can select.

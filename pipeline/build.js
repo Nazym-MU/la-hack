@@ -160,14 +160,11 @@ async function main() {
         if (await exists(path.join(outDir, "collider.glb"))) room.colliderUrl = `${appRelDir}/collider.glb`;
         continue;
       }
-      // If the agent picked a source photo for this room, resolve it to a real
-      // file so Marble can build the world from the photo (image-to-world).
-      let imagePath = null;
-      if (room.sourcePhoto) {
-        const candidate = path.join(path.resolve(args.folder), room.sourcePhoto);
-        if (await exists(candidate)) imagePath = candidate;
-        else console.warn(`[marble] room "${room.id}" sourcePhoto not found: ${room.sourcePhoto}`);
-      }
+      // Text-to-world only: we deliberately never image-to-world (that would
+      // reconstruct the photo's actual place). The agent describes the photos
+      // into the room's marblePrompt instead; World Labs only ever gets text.
+      // (image-to-world stays implemented in marble.js, just not wired here.)
+      const imagePath = null;
       try {
         const res = await generateRoomWorld({ room, config, outDir, appRelDir, stream, imagePath });
         room.worldId = res.worldId;
