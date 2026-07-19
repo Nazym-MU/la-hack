@@ -15,6 +15,7 @@ import { enableDesktopControls } from "./desktopControls.js";
 import { initOverlay, initControlsHint, initPalaceTitle } from "./overlay.js";
 import { initUploadPanel } from "./uploadPanel.js";
 import { initRoomDropdown } from "./roomDropdown.js";
+import { initXrButton } from "./xrButton.js";
 import { createRoomManager, loadPalace, seedAsPalace } from "./rooms.js";
 
 
@@ -128,6 +129,10 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
 
     // Upload panel: drop photos -> server runs the pipeline -> palace reloads.
     initUploadPanel();
+
+    // In-app "Enter XR" button for headset browsers (PICO) that get no
+    // IWER-injected one. Hidden where immersive-VR isn't supported.
+    initXrButton(world);
   })
   .catch((err) => {
     console.error("[World] Failed to create the IWSDK world:", err);
