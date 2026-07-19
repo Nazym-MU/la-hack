@@ -56,9 +56,14 @@ export function requestMemory(id: string): void {
 
 // The overlay registers itself here; MemorySystem calls it on any selection
 // (XR press or desktop click). Replaces the old uikitml panel writes.
-let memorySelectedHandler: (memory: Memory) => void = () => {};
+// Multiple consumers react to a selection: the DOM card (desktop) AND the
+// in-world spatial panel (VR). Both register here.
+const memorySelectedHandlers: Array<(memory: Memory) => void> = [];
 export function onMemorySelected(handler: (memory: Memory) => void): void {
-  memorySelectedHandler = handler;
+  memorySelectedHandlers.push(handler);
+}
+function emitMemorySelected(memory: Memory): void {
+  for (const h of memorySelectedHandlers) h(memory);
 }
 
 const gltfLoader = new GLTFLoader();
@@ -195,7 +200,7 @@ export class MemorySystem extends createSystem({
 
       const id = entity.getValue(MemoryObject, "memoryId") as string;
       const memory = getMemory(id);
-      if (memory) memorySelectedHandler(memory);
+      if (memory) emitMemorySelected(memory);
     });
 
     this.prevPressed = nowPressed;
@@ -204,7 +209,7 @@ export class MemorySystem extends createSystem({
     if (requestedMemoryId) {
       const memory = getMemory(requestedMemoryId);
       requestedMemoryId = null;
-      if (memory) memorySelectedHandler(memory);
+      if (memory) emitMemorySelected(memory);
     }
   }
 }
