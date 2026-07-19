@@ -180,7 +180,10 @@
         0,
         1.5,
         0
-      ]
+      ],
+      "worldId": "765c975a-1561-4e6a-be67-27a801273bc5",
+      "splatUrl": "https://cdn.marble.worldlabs.ai/765c975a-1561-4e6a-be67-27a801273bc5/f39fd75e-47a7-42a2-9120-295226126dde_ceramic.spz",
+      "colliderUrl": "https://cdn.marble.worldlabs.ai/765c975a-1561-4e6a-be67-27a801273bc5/6323226e.glb"
     }
   ]
 }
