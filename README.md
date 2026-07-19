@@ -41,7 +41,7 @@ MindSpace uses AI to generate a personalized world whose layout reflects how **y
 
 Every room, object, and pathway becomes a meaningful representation of your knowledge and memories.
 
-[![Demo Video](https://img.shields.io/badge/▶-Watch%20Demo-red?style=for-the-badge)]([https://your-demo-video-link](https://youtu.be/9xrII0xIUzk))
+[![Demo Video](https://img.shields.io/badge/▶-Watch%20Demo-red?style=for-the-badge)](https://youtu.be/9xrII0xIUzk)
 [![Devpost](https://img.shields.io/badge/Devpost-Submission-003E54?style=for-the-badge&logo=devpost&logoColor=white)](https://devpost.com/software/05-kylian-dictator)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
