@@ -12,6 +12,21 @@ one-line pitch, and your best GIF or 15-second demo video right at the top, befo
 [![Devpost](https://img.shields.io/badge/Devpost-Submission-003E54?style=for-the-badge&logo=devpost&logoColor=white)](https://devpost.com/software/05-kylian-dictator)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
+
+# Ideation
+
+
+<p align="center">
+  <img src="assets/can-you-take-us-to-your-brain.gif" alt="Can you take us to your brain? -The basis of a mind architecture>
+</p>
+
+##
+<p align="center">
+  <img src="assets/mindpalace-sherlock-ideation.gif" alt="MindPalace Sherlock Ideation Demo" width="1000">
+</p>
+
+
+
 # Demo walkthrough 
 a few annotated screenshots of the generated room, the manifest JSON, the voice interaction — captioned, not narrated at length.
 
