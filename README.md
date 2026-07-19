@@ -41,17 +41,16 @@ MindSpace uses AI to generate a personalized world whose layout reflects how **y
 
 Every room, object, and pathway becomes a meaningful representation of your knowledge and memories.
 
+[![Demo Video](https://img.shields.io/badge/▶-Watch%20Demo-red?style=for-the-badge)](https://your-demo-video-link)
+[![Devpost](https://img.shields.io/badge/Devpost-Submission-003E54?style=for-the-badge&logo=devpost&logoColor=white)](https://devpost.com/software/05-kylian-dictator)
+[![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
+
 ![Gemini API](https://img.shields.io/badge/Built%20with-Gemini%20API-4285F4?style=for-the-badge&logo=googlegemini&logoColor=white)
 ![WorldLabs](https://img.shields.io/badge/World%20Labs-Gaussian%20Splatting-6C5CE7?style=for-the-badge)
 ![PICO Emulator](https://img.shields.io/badge/PICO-Emulator%200.13.0-1E90FF?style=for-the-badge)
 ![TRIPO](https://img.shields.io/badge/TRIPO-3D%20GenAI-FF6B6B?style=for-the-badge)
 ![WebXR](https://img.shields.io/badge/WebXR-Spatial%20Web-000000?style=for-the-badge)
 ![Grok](https://img.shields.io/badge/Grok-xAI-1DA1F2?style=for-the-badge)
-
-[![Demo Video](https://img.shields.io/badge/▶-Watch%20Demo-red?style=for-the-badge)](https://your-demo-video-link)
-[![Devpost](https://img.shields.io/badge/Devpost-Submission-003E54?style=for-the-badge&logo=devpost&logoColor=white)](https://devpost.com/software/05-kylian-dictator)
-[![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
-
 
 # Ideation
 
@@ -83,14 +82,47 @@ a few annotated screenshots of the generated room, the manifest JSON, the voice 
 # How it works 
 — a simple architecture diagram (curator → WorldLabs → manifest → overlay) as an image, plus a short code block showing the system prompt or manifest format. This is where technical judges actually look.
 
-# Tech stack 
-`#WorldLabs` `#GaussianSplatting` `#PICOEmulator` `#WebXR` `#Obsidian` `#JSON` #TextTo3D` `#SpatialComputing` `#XR` `#VR` `#JavaScript` `#Python` `#PromptEngineering` `#API` `#React` `#Gemini` `#SpatialAudio` `#3DGeneration`
+# Tech Stack
+
+`#WorldLabs` `#GaussianSplatting` `#PICOEmulator` `#WebXR` `#Obsidian` `#JSON` `#TextTo3D` `#SpatialComputing` `#XR` `#VR` `#JavaScript` `#Python` `#PromptEngineering` `#API` `#Gemini` `#SpatialAudio` `#3DGeneration`
 
 # Setup / run instructions
-— Unity version, Node version, PICO Emulator version, env vars needed. Judges reproducing your build will actually use this.
 
-# Challenges & learnings 
-— 2–3 bullets max, link to the full write-up for depth.
+### Environment Variables
 
+Root `.env`:
+```env
+WORLDLABS_API_KEY=
+GROQ_API_KEY=
+TRIPO_API_KEY=
+GEMINI_API_KEY=
+```
+
+`server/.env`:
+```env
+TRIPO_API_KEY=
+```
+
+### Install
+
+```bash
+cd server && npm install && cd ..
+cd pipeline && npm install && cd ..
+```
+
+### Run
+
+Two terminals, side by side:
+
+```bash
+# Terminal 1 — frontend (proxies /api -> :8090)
+npm run dev              # https://localhost:8081
+```
+
+```bash
+# Terminal 2 — backend (spawns the pipeline)
+cd server && npm run dev # http://localhost:8090
+```
 # Team + links 
-Devpost, any supporting article/blog post, slides.
+[![Demo Video](https://img.shields.io/badge/▶-Watch%20Demo-red?style=for-the-badge)](https://your-demo-video-link)
+[![Devpost](https://img.shields.io/badge/Devpost-Submission-003E54?style=for-the-badge&logo=devpost&logoColor=white)](https://devpost.com/software/05-kylian-dictator)
