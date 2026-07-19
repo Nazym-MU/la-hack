@@ -1,32 +1,75 @@
 {
-  "title": "Personal Memories",
-  "generatedAt": "2026-07-19T06:51:02.213Z",
-  "sourceFolder": "/Users/aminarakhimbergenova/Documents/GitHub/la-hack/server/.uploads/e13aac39-f56b-4179-b495-34748d7387b6",
+  "title": "LA Hackathon Horizons",
+  "generatedAt": "2026-07-19T08:15:07.848Z",
+  "sourceFolder": "/Users/nuray/la-hack/server/.uploads/67c457e0-b310-410c-8b56-e0516ecfdc3c",
   "agent": {
-    "provider": "openai",
-    "model": "llama-3.3-70b-versatile"
+    "provider": "gemini",
+    "model": "gemini-3.5-flash"
   },
   "rooms": [
     {
-      "id": "room1",
-      "title": "LA Trip",
-      "theme": "Travel",
-      "marblePrompt": "A small, sunlit room with a big window looking out to the city skyline, sandy-warm light, a folded map on the desk. The walls are painted a soft beige, with a few framed photos of iconic LA landmarks. A small, wooden chest in the corner holds souvenirs.",
-      "rationale": "This room is designed to evoke the feeling of a LA trip, with a focus on the city's iconic landmarks and sunny weather.",
+      "id": "spatialize-hack-hall",
+      "title": "The Spatialize Hack Hall",
+      "theme": "Collaborative creation, high-energy coding, and late-night slide deck building",
+      "marblePrompt": "A spacious industrial loft with high exposed wooden rafters and warm string lights running across the ceiling. Long black communal work tables are cluttered with modern laptops, half-eaten paper plates of food, and insulated flasks. Bright afternoon sun streams through large glass double doors in the background, contrasting with the warm, golden indoor lights. The atmosphere is focused and kinetic, grounded by polished concrete floors and weathered brick walls.",
+      "rationale": "This room represents the physical and mental core of the hackathon—specifically Day 1's intense build phase, captured beautifully by the table setup and warm overhead wooden beams.",
+      "sourcePhoto": "IMG_9582.jpeg",
       "memories": [
         {
-          "id": "memory1",
-          "label": "LA Photo",
-          "note": "A picture from the LA trip",
-          "rationale": "Placed on the desk, where the morning light would highlight the photo's vibrant colors",
-          "objectPrompt": "a framed photo of a city skyline",
-          "sourceRef": "notes.txt",
+          "id": "spatial-presentation-laptop",
+          "label": "The Spatial Presentation",
+          "note": "The spatial web project presentation draft shown on the primary laptop.",
+          "rationale": "Placed directly in the foreground table zone to match the perspective of working on the slide deck during the hackathon.",
+          "objectPrompt": "A sleek open black laptop with a glowing screen displaying a minimalist 3D wireframe mesh grid.",
+          "sourceRef": "IMG_9582.jpeg",
           "position": [
-            0.5,
-            1,
+            0.4,
+            0.85,
             -0.5
           ],
           "color": 9150420
+        },
+        {
+          "id": "mediterranean-fuel",
+          "label": "Hackathon Fuel",
+          "note": "A plate of Mediterranean falafel and rice eaten while designing.",
+          "rationale": "Sits on the left side of the primary workspace, serving as a memory of the quick meals taken during continuous coding.",
+          "objectPrompt": "A paper plate holding a partially eaten falafel over rice, next to a clear plastic cup filled with water.",
+          "sourceRef": "IMG_9582.jpeg",
+          "position": [
+            -0.4,
+            0.85,
+            -0.6
+          ],
+          "color": 11570121
+        },
+        {
+          "id": "distraction-stream",
+          "label": "Live Match Stream",
+          "note": "A background laptop streaming a football match during work.",
+          "rationale": "Set further back on the left, representing the casual distractions shared among friends during the build.",
+          "objectPrompt": "A secondary open laptop displaying a miniature green football pitch during a live broadcast.",
+          "sourceRef": "IMG_9582.jpeg",
+          "position": [
+            -1.2,
+            0.9,
+            -1
+          ],
+          "color": 13214590
+        },
+        {
+          "id": "hydration-flask",
+          "label": "Team Hydration",
+          "note": "The reusable water bottle kept at the table.",
+          "rationale": "Positioned as a central pillar on the table, marking the constant presence of personal gear.",
+          "objectPrompt": "A sturdy blue insulated water bottle with a bold red cap.",
+          "sourceRef": "IMG_9582.jpeg",
+          "position": [
+            -0.7,
+            0.95,
+            -0.5
+          ],
+          "color": 8304806
         }
       ],
       "origin": [
@@ -39,31 +82,46 @@
         1.5,
         0
       ],
-      "worldId": "155ca939-663a-43a2-ba65-2bc9a3625fa3",
-      "splatUrl": "https://cdn.marble.worldlabs.ai/155ca939-663a-43a2-ba65-2bc9a3625fa3/522e61bb-e6d0-4550-b13b-79ac6adfe7c2_ceramic_500k.spz",
-      "colliderUrl": "https://cdn.marble.worldlabs.ai/155ca939-663a-43a2-ba65-2bc9a3625fa3/4abe4556.glb",
-      "splatUrlLow": "https://cdn.marble.worldlabs.ai/155ca939-663a-43a2-ba65-2bc9a3625fa3/64d3c203-7616-4942-a6d9-437c9312a69c_ceramic_150k.spz"
+      "worldId": "a2e75581-9488-4769-bdd2-5fcb319542fd",
+      "splatUrl": "https://cdn.marble.worldlabs.ai/a2e75581-9488-4769-bdd2-5fcb319542fd/620beca4-18a7-41b8-9a4f-a4fbd2bbbfac_ceramic_500k.spz",
+      "splatUrlLow": "https://cdn.marble.worldlabs.ai/a2e75581-9488-4769-bdd2-5fcb319542fd/4d79984e-ff58-4de7-a33e-6c95fd3025f3_ceramic_150k.spz",
+      "colliderUrl": "https://cdn.marble.worldlabs.ai/a2e75581-9488-4769-bdd2-5fcb319542fd/2ee8258d.glb"
     },
     {
-      "id": "room2",
-      "title": "Grandma's Kitchen",
-      "theme": "Family",
-      "marblePrompt": "A cozy, warm kitchen with a big window looking out to a garden, soft natural light, a wooden table with a few family photos. The walls are painted a warm yellow, with a few antique utensils on the shelves.",
-      "rationale": "This room is designed to evoke the feeling of a warm and cozy family kitchen, with a focus on the grandmother's presence.",
+      "id": "industrial-stairwell",
+      "title": "The Industrial Stairwell",
+      "theme": "Moments of movement and transit between noisy hackathon floors",
+      "marblePrompt": "A narrow, functional stairwell descending between levels of an industrial warehouse conversion. The steps are made of dark textured steel grating with safety treads, and the high walls are smooth concrete in deep shades of charcoal and olive grey. Flat, diffuse lighting casts soft shadows, creating a sense of transition and quiet movement away from the bustling event space.",
+      "rationale": "This room captures the transitional moment of moving between floors, represented by the staircase snapshot.",
+      "sourcePhoto": "IMG_9581.jpeg",
       "memories": [
         {
-          "id": "memory2",
-          "label": "Grandma's Kitchen Photo",
-          "note": "A picture of grandma's kitchen",
-          "rationale": "Placed on the wooden table, where the soft light would bring out the photo's warm colors",
-          "objectPrompt": "a framed photo of a kitchen",
-          "sourceRef": "notes.txt",
+          "id": "transit-sneakers",
+          "label": "The Descent",
+          "note": "The act of walking down to the lower level to explore other teams' projects.",
+          "rationale": "Placed low near the bottom of the visible stair steps to anchor the sense of downward motion.",
+          "objectPrompt": "A pair of yellow-soled low-top canvas sneakers resting on a metal-grated stair step.",
+          "sourceRef": "IMG_9581.jpeg",
           "position": [
             0,
-            1,
-            -0.8
+            1.1,
+            -1.2
           ],
-          "color": 11570121
+          "color": 13208475
+        },
+        {
+          "id": "industrial-handrail",
+          "label": "Industrial Railing",
+          "note": "The raw industrial materials of the venue space.",
+          "rationale": "Positioned along the left wall path to match the actual handrail that guides visitors through the stairwell.",
+          "objectPrompt": "A simple dark steel industrial handrail with visible mounting bolts.",
+          "sourceRef": "IMG_9581.jpeg",
+          "position": [
+            -0.7,
+            1.3,
+            -0.6
+          ],
+          "color": 5999871
         }
       ],
       "origin": [
@@ -76,10 +134,90 @@
         1.5,
         0
       ],
-      "worldId": "13173356-f0b3-4d65-a0db-92609b86fbef",
-      "splatUrl": "https://cdn.marble.worldlabs.ai/13173356-f0b3-4d65-a0db-92609b86fbef/367c5624-cc53-440c-b7af-c7cc08d9f757_ceramic_500k.spz",
-      "colliderUrl": "https://cdn.marble.worldlabs.ai/13173356-f0b3-4d65-a0db-92609b86fbef/ceef7e0e.glb",
-      "splatUrlLow": "https://cdn.marble.worldlabs.ai/13173356-f0b3-4d65-a0db-92609b86fbef/35ba2699-2213-4afe-872e-d72919dacde5_ceramic_150k.spz"
+      "worldId": "2a88daee-c073-4b2a-b512-e237d7d9f3ff",
+      "splatUrl": "https://cdn.marble.worldlabs.ai/2a88daee-c073-4b2a-b512-e237d7d9f3ff/c275cfe3-e082-43e4-b82a-0781367474d2_ceramic_500k.spz",
+      "splatUrlLow": "https://cdn.marble.worldlabs.ai/2a88daee-c073-4b2a-b512-e237d7d9f3ff/87e09a72-fd25-407a-baf4-6ef5ad85021e_ceramic_150k.spz",
+      "colliderUrl": "https://cdn.marble.worldlabs.ai/2a88daee-c073-4b2a-b512-e237d7d9f3ff/d5735a4c.glb"
+    },
+    {
+      "id": "gathering-hub",
+      "title": "The Gathering Hub",
+      "theme": "The bustling human energy, networking, and friendships of Day 1",
+      "marblePrompt": "An expansive, high-ceilinged warehouse event space densely filled with long black folding tables. Warm Edison bulbs hang from overhead cords, casting a golden light over people, laptops, and snack packaging. In the background, green moss wall partitions offer a touch of color against concrete floors. The atmosphere is bustling, vibrant, and packed with collaborative energy.",
+      "rationale": "This room captures the collective social scale of the hackathon, housing memories of the crowd and close friendships.",
+      "sourcePhoto": "IMG_9579.jpeg",
+      "memories": [
+        {
+          "id": "event-badge-lanyard",
+          "label": "The Hackathon Badge",
+          "note": "The badge worn throughout the weekend to access the venue.",
+          "rationale": "Placed near the table edge, mimicking the way personal badges are set aside or worn during work sessions.",
+          "objectPrompt": "A dark woven fabric lanyard with a clean geometric icon print, attached to a transparent plastic sleeve.",
+          "sourceRef": "IMG_9594.jpeg",
+          "position": [
+            0.3,
+            0.9,
+            -0.8
+          ],
+          "color": 9150420
+        },
+        {
+          "id": "coder-backpack",
+          "label": "The Coder's Pack",
+          "note": "The gear bag carried from place to place during the trip.",
+          "rationale": "Resting against the leg of a table to mimic where developers stash their belongings in crowded spaces.",
+          "objectPrompt": "A matte black heavy-duty nylon backpack with multiple zippered utility pockets.",
+          "sourceRef": "IMG_9579.jpeg",
+          "position": [
+            -0.8,
+            0.8,
+            -1.1
+          ],
+          "color": 11570121
+        },
+        {
+          "id": "edison-pendant",
+          "label": "Overhead Edison",
+          "note": "The warm string lighting that defined the venue's tech-cafe aesthetic.",
+          "rationale": "Suspended high in the space to represent the moody, warm illumination of the event.",
+          "objectPrompt": "A single low-hanging filament bulb glowing warmly on a minimalist black cord.",
+          "sourceRef": "IMG_9579.jpeg",
+          "position": [
+            0,
+            1.7,
+            -0.4
+          ],
+          "color": 13214590
+        },
+        {
+          "id": "shared-coffee-cup",
+          "label": "Shared Coffee",
+          "note": "The warm drinks that kept the team energized during long discussions.",
+          "rationale": "Sits near the workspace corner, symbolizing the shared moments of talking through ideas over drinks.",
+          "objectPrompt": "A white takeaway paper coffee cup with a simple brown sleeve sitting next to a laptop.",
+          "sourceRef": "IMG_9579.jpeg",
+          "position": [
+            0.6,
+            0.9,
+            -1
+          ],
+          "color": 8304806
+        }
+      ],
+      "origin": [
+        28,
+        0,
+        0
+      ],
+      "spawn": [
+        0,
+        1.5,
+        0
+      ],
+      "worldId": "f11bf1a4-48c0-48c3-8b06-2b7f53949ec8",
+      "splatUrl": "https://cdn.marble.worldlabs.ai/f11bf1a4-48c0-48c3-8b06-2b7f53949ec8/2901de05-8d32-44b2-89f9-5014696b911b_ceramic_500k.spz",
+      "splatUrlLow": "https://cdn.marble.worldlabs.ai/f11bf1a4-48c0-48c3-8b06-2b7f53949ec8/58088387-be87-4ba9-8d01-4ed465c6eb10_ceramic_150k.spz",
+      "colliderUrl": "https://cdn.marble.worldlabs.ai/f11bf1a4-48c0-48c3-8b06-2b7f53949ec8/bd70a057.glb"
     }
   ]
 }

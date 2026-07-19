@@ -187,12 +187,15 @@ async function uploadImageAsset(base, filePath) {
   });
   console.log("[marble] prepare_upload (raw):", JSON.stringify(prep).slice(0, 500));
 
+  // Actual shape (confirmed against a live prepare_upload call):
+  // { media_asset: { media_asset_id, ... }, upload_info: { upload_url,
+  //   upload_method, required_headers } }
   const asset = prep.media_asset ?? prep;
-  const assetId = asset.id ?? asset.media_asset_id ?? prep.id;
-  const up = prep.upload ?? asset.upload ?? {};
-  const uploadUrl = up.url ?? prep.upload_url ?? asset.upload_url ?? prep.signed_url ?? asset.signed_url;
-  const method = (up.method ?? "PUT").toUpperCase();
-  const headers = up.headers ?? {};
+  const assetId = asset.media_asset_id ?? asset.id ?? prep.id;
+  const up = prep.upload_info ?? prep.upload ?? asset.upload ?? {};
+  const uploadUrl = up.upload_url ?? up.url ?? prep.upload_url ?? asset.upload_url ?? prep.signed_url ?? asset.signed_url;
+  const method = (up.upload_method ?? up.method ?? "PUT").toUpperCase();
+  const headers = up.required_headers ?? up.headers ?? {};
   if (!assetId || !uploadUrl) {
     throw new Error("prepare_upload response missing id or upload URL (see raw above)");
   }
