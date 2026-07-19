@@ -12,11 +12,7 @@ import { digestItems } from "./ingest.js";
 const here = path.dirname(fileURLToPath(import.meta.url));
 
 async function loadPrompt() {
-  const [system, guidance] = await Promise.all([
-    fs.readFile(path.join(here, "prompts", "system.md"), "utf8"),
-    fs.readFile(path.join(here, "prompts", "marble-guidance.md"), "utf8"),
-  ]);
-  return `${system}\n\n${guidance}`;
+  return fs.readFile(path.join(here, "prompts", "marble-guidance.md"), "utf8");
 }
 
 function taskInstruction(config) {
