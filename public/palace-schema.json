@@ -1,7 +1,7 @@
 {
   "title": "Palace of Shared Moments",
-  "generatedAt": "2026-07-19T17:55:24.288Z",
-  "sourceFolder": "/Users/nuray/la-hack/server/.uploads/cf4b2320-2b93-4808-aa8e-4d482376b55e",
+  "generatedAt": "2026-07-19T18:57:41.598Z",
+  "sourceFolder": "/Users/nuray/la-hack/server/.uploads/3c6303bf-4d56-4f2f-957f-6b0fdced75f0",
   "agent": {
     "provider": "gemini",
     "model": "gemini-3.5-flash"
@@ -24,10 +24,11 @@
           "sourceRef": "IMG_9582.jpeg",
           "position": [
             0.4,
-            0.85,
+            0.2,
             -0.5
           ],
-          "color": 9150420
+          "color": 9150420,
+          "modelUrl": "./palaces/demo/room-spatialize-hack-hall/objects/spatial-presentation-laptop.glb"
         },
         {
           "id": "mediterranean-fuel",
@@ -38,10 +39,11 @@
           "sourceRef": "IMG_9582.jpeg",
           "position": [
             -0.4,
-            0.85,
+            0.2,
             -0.6
           ],
-          "color": 11570121
+          "color": 11570121,
+          "modelUrl": "./palaces/demo/room-spatialize-hack-hall/objects/mediterranean-fuel.glb"
         },
         {
           "id": "distraction-stream",
@@ -52,10 +54,11 @@
           "sourceRef": "IMG_9582.jpeg",
           "position": [
             -1.2,
-            0.9,
+            0.25,
             -1
           ],
-          "color": 13214590
+          "color": 13214590,
+          "modelUrl": "./palaces/demo/room-spatialize-hack-hall/objects/distraction-stream.glb"
         },
         {
           "id": "hydration-flask",
@@ -66,10 +69,11 @@
           "sourceRef": "IMG_9582.jpeg",
           "position": [
             -0.7,
-            0.95,
+            0.3,
             -0.5
           ],
-          "color": 8304806
+          "color": 8304806,
+          "modelUrl": "./palaces/demo/room-spatialize-hack-hall/objects/hydration-flask.glb"
         }
       ],
       "origin": [
@@ -104,10 +108,11 @@
           "sourceRef": "IMG_9581.jpeg",
           "position": [
             0,
-            1.1,
+            0.45,
             -1.2
           ],
-          "color": 13208475
+          "color": 13208475,
+          "modelUrl": "./palaces/demo/room-industrial-stairwell/objects/transit-sneakers.glb"
         },
         {
           "id": "industrial-handrail",
@@ -118,10 +123,11 @@
           "sourceRef": "IMG_9581.jpeg",
           "position": [
             -0.7,
-            1.3,
+            0.65,
             -0.6
           ],
-          "color": 5999871
+          "color": 5999871,
+          "modelUrl": "./palaces/demo/room-industrial-stairwell/objects/industrial-handrail.glb"
         }
       ],
       "origin": [
@@ -156,10 +162,11 @@
           "sourceRef": "IMG_9594.jpeg",
           "position": [
             0.3,
-            0.9,
+            0.25,
             -0.8
           ],
-          "color": 9150420
+          "color": 9150420,
+          "modelUrl": "./palaces/demo/room-gathering-hub/objects/event-badge-lanyard.glb"
         },
         {
           "id": "coder-backpack",
@@ -170,10 +177,11 @@
           "sourceRef": "IMG_9579.jpeg",
           "position": [
             -0.8,
-            0.8,
+            0.15,
             -1.1
           ],
-          "color": 11570121
+          "color": 11570121,
+          "modelUrl": "./palaces/demo/room-gathering-hub/objects/coder-backpack.glb"
         },
         {
           "id": "edison-pendant",
@@ -184,10 +192,11 @@
           "sourceRef": "IMG_9579.jpeg",
           "position": [
             0,
-            1.7,
+            0.85,
             -0.4
           ],
-          "color": 13214590
+          "color": 13214590,
+          "modelUrl": "./palaces/demo/room-gathering-hub/objects/edison-pendant.glb"
         },
         {
           "id": "shared-coffee-cup",
@@ -198,10 +207,11 @@
           "sourceRef": "IMG_9579.jpeg",
           "position": [
             0.6,
-            0.9,
+            0.25,
             -1
           ],
-          "color": 8304806
+          "color": 8304806,
+          "modelUrl": "./palaces/demo/room-gathering-hub/objects/shared-coffee-cup.glb"
         }
       ],
       "origin": [
@@ -236,10 +246,11 @@
           "sourceRef": "IMG_9522.jpeg",
           "position": [
             -1.2,
-            1.1,
+            0.45,
             -0.8
           ],
-          "color": 9150420
+          "color": 9150420,
+          "modelUrl": "./palaces/demo/room-la-rooftop-lounge/objects/hotel-prep-selfie.glb"
         },
         {
           "id": "street-side-tacos",
@@ -250,10 +261,11 @@
           "sourceRef": "IMG_9564.jpeg",
           "position": [
             1,
-            0.9,
+            0.25,
             0.5
           ],
-          "color": 11570121
+          "color": 11570121,
+          "modelUrl": "./palaces/demo/room-la-rooftop-lounge/objects/street-side-tacos.glb"
         },
         {
           "id": "skyline-rooftop-group",
@@ -264,10 +276,26 @@
           "sourceRef": "IMG_9702.jpeg",
           "position": [
             0,
-            1.2,
+            0.55,
             -1.5
           ],
-          "color": 13214590
+          "color": 13214590,
+          "modelUrl": "./palaces/demo/room-la-rooftop-lounge/objects/skyline-rooftop-group.glb"
+        },
+        {
+          "id": "rooftop-group-photo",
+          "label": "Rooftop Friends Portrait",
+          "note": "A happy snapshot of five close friends enjoying the city views under the night sky.",
+          "rationale": "Clipped elegantly to the glass safety barrier overlooking the illuminated skyline, bridging the spatial physical boundaries with the captured image.",
+          "objectPrompt": "A classic white-bordered instant film photo displaying a group of five smiling young friends sitting together on a dark-orange tiled ledge at night.",
+          "sourceRef": "IMG_9702.jpeg",
+          "position": [
+            0,
+            0.65,
+            -1.2
+          ],
+          "color": 8304806,
+          "modelUrl": "./palaces/demo/room-la-rooftop-lounge/objects/rooftop-group-photo.glb"
         }
       ],
       "origin": [
@@ -284,6 +312,144 @@
       "splatUrl": "https://cdn.marble.worldlabs.ai/965e9a4a-7bd2-455b-98dd-fe5711a8c35e/a0b449d8-00a4-4069-b675-126671a127f7_ceramic_500k.spz",
       "splatUrlLow": "https://cdn.marble.worldlabs.ai/965e9a4a-7bd2-455b-98dd-fe5711a8c35e/387211a7-da0f-46a1-9aa2-57fd2002d08c_ceramic_150k.spz",
       "colliderUrl": "https://cdn.marble.worldlabs.ai/965e9a4a-7bd2-455b-98dd-fe5711a8c35e/40011e47.glb"
+    },
+    {
+      "id": "cozy-dessert-cafe",
+      "title": "The Terrazzo Dessert Parlor",
+      "theme": "A warm, aesthetic dessert date filled with whimsical sweets and rich matcha",
+      "marblePrompt": "A small, intimate corner of a modern dessert cafe. The space features a polished terrazzo-topped table with pastel pink and grey specks under a warm, low-hanging pendant light that casts a soft pool of light. Simple light wood chairs surround the table. In the background, a smooth dust-pink plaster wall creates a minimalist and calming backdrop. A short arched doorway leads out to a dimly lit hallway.",
+      "rationale": "The cafe memories are distinctly separate in atmosphere and setting from the high-energy hackathon and nighttime clubbing scenes, representing a cozy afternoon winding down with friends.",
+      "existingRoomId": "",
+      "memories": [
+        {
+          "id": "panda-dessert",
+          "label": "Panda Mousse",
+          "note": "A whimsical, adorable panda-shaped dessert that brought playfulness to the table.",
+          "rationale": "Placed directly in the center of the terrazzo tabletop as the visual focal point of the sweet gathering.",
+          "objectPrompt": "A highly detailed miniature cream-and-chocolate mousse cake shaped like a sleeping panda, resting on a small dark brown ceramic plate.",
+          "sourceRef": "IMG_9571.jpeg",
+          "position": [
+            0.2,
+            0.25,
+            -0.1
+          ],
+          "color": 9150420,
+          "modelUrl": "./palaces/demo/room-cozy-dessert-cafe/objects/panda-dessert.glb"
+        },
+        {
+          "id": "matcha-latte",
+          "label": "Artistic Matcha Latte",
+          "note": "A warm cup of vibrant green matcha latte adorned with delicate leaf art.",
+          "rationale": "Positioned on the edge of the terrazzo table, mimicking where a guest would sit and sip.",
+          "objectPrompt": "A simple white ceramic cup filled with a bright green matcha latte featuring clean, white foam leaf art on top.",
+          "sourceRef": "IMG_9570.jpeg",
+          "position": [
+            -0.3,
+            0.2,
+            0.2
+          ],
+          "color": 11570121,
+          "modelUrl": "./palaces/demo/room-cozy-dessert-cafe/objects/matcha-latte.glb"
+        },
+        {
+          "id": "dessert-outing-note",
+          "label": "Cafe Conversation",
+          "note": "A sweet afternoon spent talking, laughing, and sharing treats with close friends.",
+          "rationale": "Placed on a folded napkin beside the dessert fork, anchoring the casual, warm memory of coffee house conversation.",
+          "objectPrompt": "A single polished silver dessert spoon resting on a neatly folded white paper napkin.",
+          "sourceRef": "notes.txt",
+          "position": [
+            -0.1,
+            0.17,
+            0.4
+          ],
+          "color": 13214590,
+          "modelUrl": "./palaces/demo/room-cozy-dessert-cafe/objects/dessert-outing-note.glb"
+        }
+      ],
+      "origin": [
+        56,
+        0,
+        0
+      ],
+      "spawn": [
+        0,
+        1.5,
+        0
+      ],
+      "worldId": "7d788034-675e-4764-ab22-deb3d13972a5",
+      "splatUrl": "https://cdn.marble.worldlabs.ai/7d788034-675e-4764-ab22-deb3d13972a5/a5824132-2c41-4282-b3e6-ecfbe5b808fd_ceramic_500k.spz",
+      "splatUrlLow": "https://cdn.marble.worldlabs.ai/7d788034-675e-4764-ab22-deb3d13972a5/a961a64e-1249-4334-b7c5-556c9f839285_ceramic_150k.spz",
+      "colliderUrl": "https://cdn.marble.worldlabs.ai/7d788034-675e-4764-ab22-deb3d13972a5/ca39b92f.glb"
+    },
+    {
+      "id": "sunny-office-veranda",
+      "title": "The Sunlit Campus Veranda",
+      "theme": "A bright, playful day hosting a close friend at a creative, modern workplace",
+      "marblePrompt": "A small, sun-drenched outdoor office terrace combined with a quirky indoor lounge corner. Warm wooden deck floorboards extend under a large, lime-green canvas patio umbrella that casts soft filtered light. Against an adjacent glass partition wall stands a vibrant, classic red British telephone booth, its glass panes reflecting the bright blue sky. A simple grey metal patio table is set with two modern black wire mesh chairs. A doorway on the left leads back into a polished, modern hallway of the palace.",
+      "rationale": "All uploaded items represent a single, cohesive visit from Patryk at the user's Google workplace, capturing the transition, the scenic terrace breakfast, and the playful indoor office art installations.",
+      "existingRoomId": "",
+      "memories": [
+        {
+          "id": "commuter-backpacks",
+          "label": "Commuter Backpacks",
+          "note": "Representing the morning arrival and joint commute to the office.",
+          "rationale": "Placed tucked neatly under one of the black wire chairs on the deck floor, where bags are naturally set down upon arrival.",
+          "objectPrompt": "Two dark grey commuter backpacks resting side-by-side with a bright, multi-colored water bottle tucked between them.",
+          "sourceRef": "IMG_9456.jpeg",
+          "position": [
+            -0.8,
+            0.15,
+            -0.6
+          ],
+          "color": 9150420,
+          "modelUrl": "./palaces/demo/room-sunny-office-veranda/objects/commuter-backpacks.glb"
+        },
+        {
+          "id": "terrace-breakfast",
+          "label": "Terrace Breakfast Spread",
+          "note": "A leisurely morning breakfast of bagels, fruit, and tea shared under green umbrellas.",
+          "rationale": "Placed directly on the grey metal patio table at the center of the scene to anchor the social interaction.",
+          "objectPrompt": "A white ceramic plate holding sliced bagels with cream cheese, a small bowl of fresh berries, and a steaming white mug of tea.",
+          "sourceRef": "IMG_9459.jpeg",
+          "position": [
+            0,
+            0.45,
+            0
+          ],
+          "color": 11570121,
+          "modelUrl": "./palaces/demo/room-sunny-office-veranda/objects/terrace-breakfast.glb"
+        },
+        {
+          "id": "red-telephone-booth",
+          "label": "Vintage Phone Booth",
+          "note": "A playful moment of exploration inside the office's quirky interior spaces.",
+          "rationale": "Placed as a prominent architectural feature against the back partition wall, inviting the visitor to look through its glass panes.",
+          "objectPrompt": "A miniature classic British red telephone booth with multi-pane glass windows and a gold emblem on top.",
+          "sourceRef": "IMG_9472.jpeg",
+          "position": [
+            1.2,
+            0.75,
+            -1
+          ],
+          "color": 13214590,
+          "modelUrl": "./palaces/demo/room-sunny-office-veranda/objects/red-telephone-booth.glb"
+        }
+      ],
+      "origin": [
+        70,
+        0,
+        0
+      ],
+      "spawn": [
+        0,
+        1.5,
+        0
+      ],
+      "worldId": "e2f7cb5a-0ffe-46c8-8189-a174346fa9cc",
+      "splatUrl": "https://cdn.marble.worldlabs.ai/e2f7cb5a-0ffe-46c8-8189-a174346fa9cc/ffc3aeba-e49c-47eb-922d-b7f411f4bfd6_ceramic_500k.spz",
+      "splatUrlLow": "https://cdn.marble.worldlabs.ai/e2f7cb5a-0ffe-46c8-8189-a174346fa9cc/861b289e-8b78-486b-8e64-85d2c4f9c4a6_ceramic_150k.spz",
+      "colliderUrl": "https://cdn.marble.worldlabs.ai/e2f7cb5a-0ffe-46c8-8189-a174346fa9cc/5b75b6c4.glb"
     }
   ]
 }

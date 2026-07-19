@@ -167,7 +167,7 @@ const SHAPE_HINT =
   '"memories": [{"id": string, ' +
   '"label": string, "note": string, "rationale": string, "objectPrompt": string, "sourceRef": string, ' +
   '"position": [x, y, z]}]}]}\n' +
-  'position is room-local metres: x/z within ~1.5 of centre, y between 0.8 and 1.4. ' +
+  'position is room-local metres: x/z within ~1.5 of centre, y at natural eye-level height, between -0.1 and 0.9. ' +
   'sourcePhoto is the filename of the best photo for the room, or "". ' +
   'existingRoomId is an existing room\'s exact id if this content continues it, or "". Output JSON only.';
 
@@ -339,7 +339,7 @@ function runMock({ items, config }) {
             rationale: `[mock] Placed where the eye lands when turning ${mi % 2 ? "left" : "right"} on entering.`,
             objectPrompt: it.kind === "image" ? "a framed photograph on a wooden stand" : "a folded handwritten note",
             sourceRef: it.relPath,
-            position: [Math.cos(angle) * 1.6, 1.3, Math.sin(angle) * 1.6 - 1.2],
+            position: [Math.cos(angle) * 1.6, 0.3, Math.sin(angle) * 1.6 - 1.2],
           };
         }),
       };
