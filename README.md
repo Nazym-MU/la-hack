@@ -74,7 +74,9 @@ a few annotated screenshots of the generated room, the manifest JSON, the voice 
 
 <details>
 <summary>Pics/Screenshots of Demo</summary>
-  
+
+<p>Here is a quick look at MindSpace in action. The first picture shows the upload dialogue, where you drop in your photos and notes to start building your world. The second picture shows the dialogue for adding an object, where a single memory becomes a small item you can place inside a room. The remaining pictures show real examples of what MindSpace generated, the rooms it built and the memories placed inside them, ready to walk through and explore.</p>
+
 <p align="center">
   <img src="assets/demo-walkthrough4.png" alt="demo-walkthrough">
 </p>
