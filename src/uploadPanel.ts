@@ -35,13 +35,35 @@ export function initUploadPanel(): void {
   const goBtn = el<HTMLButtonElement>("mp-build-go");
   const logBox = el<HTMLPreElement>("mp-build-log");
   let busy = false;
+  let currentJobId: string | null = null;
+  let currentEs: EventSource | null = null;
 
   const open = () => backdrop.classList.remove("mp-hidden");
   const close = () => {
     if (!busy) backdrop.classList.add("mp-hidden");
   };
+  const cancelBuild = async () => {
+    if (!busy) {
+      close();
+      return;
+    }
+    const jobId = currentJobId;
+    currentEs?.close();
+    currentEs = null;
+    appendLog("cancelling…");
+    if (jobId) {
+      try {
+        await fetch(`/api/build-palace/${jobId}/cancel`, { method: "POST" });
+      } catch {
+        // best-effort — the job may already be gone server-side
+      }
+    }
+    appendLog("✗ cancelled.");
+    resetButton();
+    close();
+  };
   el<HTMLButtonElement>("mp-build-btn").addEventListener("click", open);
-  el<HTMLButtonElement>("mp-build-cancel").addEventListener("click", close);
+  el<HTMLButtonElement>("mp-build-cancel").addEventListener("click", cancelBuild);
   backdrop.addEventListener("click", (e) => {
     if (e.target === backdrop) close();
   });
@@ -86,13 +108,16 @@ export function initUploadPanel(): void {
       });
       const j = await res.json();
       if (!res.ok || !j.jobId) throw new Error(j.error ?? "the build didn't start");
+      currentJobId = j.jobId;
 
       const es = new EventSource(`/api/build-palace/${j.jobId}/stream`);
+      currentEs = es;
       es.onmessage = (ev) => {
         const d = JSON.parse(ev.data);
         if (d.line) appendLog(d.line);
         if (d.done) {
           es.close();
+          currentEs = null;
           if (d.ok) {
             appendLog("\n✓ done — reloading the palace…");
             setTimeout(() => location.reload(), 1500);
@@ -105,6 +130,7 @@ export function initUploadPanel(): void {
       es.onerror = () => {
         appendLog("(progress stream dropped — the build may still be running; refresh in a minute)");
         es.close();
+        currentEs = null;
         resetButton();
       };
     } catch (err) {
@@ -115,6 +141,7 @@ export function initUploadPanel(): void {
 
   function resetButton() {
     busy = false;
+    currentJobId = null;
     goBtn.disabled = false;
     goBtn.textContent = "Build";
   }

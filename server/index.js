@@ -196,7 +196,7 @@ app.post("/api/build-palace", async (req, res) => {
       await fsp.writeFile(path.join(jobDir, "notes.txt"), notes.trim());
     }
 
-    const job = { log: [], finished: false, ok: false };
+    const job = { log: [], finished: false, ok: false, cancelled: false, child: null };
     jobs.set(jobId, job);
 
     const child = spawn(
@@ -204,16 +204,19 @@ app.post("/api/build-palace", async (req, res) => {
       [`--env-file-if-exists=${rootEnv}`, "build.js", jobDir, "--provider", provider || "gemini", "--generate"],
       { cwd: pipelineDir, env: process.env },
     );
+    job.child = child;
     const onData = (buf) => {
       for (const line of buf.toString().split(/\r?\n/)) if (line.trim()) job.log.push(line);
     };
     child.stdout.on("data", onData);
     child.stderr.on("data", onData);
     child.on("close", (code) => {
+      if (job.cancelled) return; // cancel endpoint already finalized this job
       job.finished = true;
       job.ok = code === 0;
     });
     child.on("error", (err) => {
+      if (job.cancelled) return;
       job.log.push("spawn error: " + err.message);
       job.finished = true;
       job.ok = false;
@@ -225,6 +228,21 @@ app.post("/api/build-palace", async (req, res) => {
     console.error("[server] build-palace error:", err);
     res.status(500).json({ error: String(err.message ?? err) });
   }
+});
+
+// Cancel a running build: SIGTERM the spawned pipeline child and finalize the
+// job as failed so the SSE stream ends cleanly with { done: true, ok: false }.
+app.post("/api/build-palace/:id/cancel", (req, res) => {
+  const job = jobs.get(req.params.id);
+  if (!job) return res.status(404).json({ error: "job not found" });
+  if (job.finished) return res.json({ ok: true, alreadyFinished: true });
+
+  job.cancelled = true;
+  job.child?.kill("SIGTERM");
+  job.log.push("✗ build cancelled by user.");
+  job.finished = true;
+  job.ok = false;
+  res.json({ ok: true });
 });
 
 // SSE progress for a build job. Replays the log so far, then streams new lines,
