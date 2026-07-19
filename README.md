@@ -15,12 +15,15 @@ one-line pitch, and your best GIF or 15-second demo video right at the top, befo
 
 # Ideation
 
+The idea starts with a question: how can we locate information in our minds, build association, and interact with our own thinking process? Eileen Gu (Gu Ailing) was once asked, "Do you think before you speak? You're so articulate about everything, from geopolitics to aerodynamics to your sport, can you take us to your mind?" That's foundational thinking, and we are building this: something here to take you to your mind. 
 
 <p align="center">
   <img src="assets/can-you-take-us-to-your-brain.gif" alt="Can you take us to your brain? -The basis of a mind architecture>
 </p>
 
 ##
+Sherlock Holmes is also famous for recalling memories through a mind palace, an association method that made him a brilliant investigator and a man of composed mind. Seeing the short gif below, that's how we imagine the 3D space we're creating would be: you're able to pull objects, find slots of memory, and engage with your own thinking process and awareness.
+
 <p align="center">
   <img src="assets/mindpalace-sherlock-ideation.gif" alt="MindPalace Sherlock Ideation Demo" width="1000">
 </p>
