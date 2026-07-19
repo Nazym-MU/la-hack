@@ -5,11 +5,9 @@ import { ingestFolder } from "./ingest.js";
 import { runAgent } from "./llm.js";
 import { assignLayout } from "./layout.js";
 import { generateRoomWorld } from "./marble.js";
-import { generateMemoryObject } from "./tripo.js";
 
-// Orchestrator: upload folder -> agent -> layout -> (optional) Marble worlds +
-// TRIPO objects -> public/palace-schema.json + cached assets under
-// public/palaces/<name>/.
+// Orchestrator: upload folder -> agent -> layout -> (optional) Marble worlds ->
+// public/palace-schema.json + cached assets under public/palaces/<name>/.
 //
 // There is exactly one palace ("demo") that every upload adds to — the agent
 // sees what rooms already exist and decides per new cluster whether it
@@ -19,20 +17,14 @@ import { generateMemoryObject } from "./tripo.js";
 //
 // Usage:
 //   node build.js <folder> [--generate] [--provider claude|gemini|mock]
-//                          [--name <slug>] [--out <dir>] [--max-rooms N]
-//                          [--max-objects N]
+//                          [--name <slug>] [--out <dir>]
 //
 //   (no flags)   ingest + agent + layout, write schema. Rooms keep the bundled
-//                stand-in world (splatUrl undefined) and memories stay
-//                placeholder orbs — build/test everything before spending
-//                Marble/TRIPO credits.
-//   --generate   also call Marble per NEW room (download splats, wire
-//                splatUrls) AND TRIPO per memory lacking a modelUrl (download
-//                a GLB, wire modelUrl). Both idempotent: a room whose
-//                world.spz already exists, or a memory whose GLB already
-//                exists, is skipped. Rooms are ALWAYS built from the curated
-//                marblePrompt text — never a literal reconstruction of an
-//                uploaded photo (see note on sourcePhoto below).
+//                stand-in world (splatUrl undefined) — build/test everything
+//                before spending Marble credits.
+//   --generate   also call Marble per NEW room, download splats, wire
+//                splatUrls. Idempotent: a room whose world.spz already
+//                exists is skipped.
 //   --name       override the "demo" identity — for local test runs against
 //                a scratch palace without touching the real one.
 
@@ -84,7 +76,7 @@ async function main() {
   console.log(`  folder:   ${path.resolve(args.folder)}`);
   console.log(`  palace:   ${name}${existing ? ` (existing, ${existing.rooms.length} room(s))` : " (new)"}`);
   console.log(`  provider: ${provider}`);
-  console.log(`  generate: ${doGenerate ? "YES (Marble worlds + TRIPO objects)" : "no (schema only, stand-in world)"}`);
+  console.log(`  generate: ${doGenerate ? "YES (Marble worlds)" : "no (schema only, stand-in world)"}`);
   console.log(`  output:   ${palaceDir}\n`);
 
   // 1. Ingest
@@ -145,7 +137,6 @@ async function main() {
 
   // 4. (optional) Marble generation, cached + idempotent — only for rooms new
   // in THIS batch; already-merged rooms keep whatever splatUrl they had.
-  let objectsGenerated = 0;
   if (doGenerate) {
     // Streaming (default): splatUrls point at World Labs' CDN, nothing stored
     // locally. --download caches assets under public/ instead.
@@ -169,60 +160,19 @@ async function main() {
         if (await exists(path.join(outDir, "collider.glb"))) room.colliderUrl = `${appRelDir}/collider.glb`;
         continue;
       }
-      // Rooms are always built from the curated marblePrompt text, never a
-      // literal reconstruction of an uploaded photo — a room is a curated
-      // mind-space, not a photo scan of the real place (see the "Mind-Space
-      // Aesthetic" section of prompts/marble-guidance.md). room.sourcePhoto
-      // is intentionally never resolved to an image-to-world call here.
+      // Text-to-world only: we deliberately never image-to-world (that would
+      // reconstruct the photo's actual place). The agent describes the photos
+      // into the room's marblePrompt instead; World Labs only ever gets text.
       // (image-to-world stays implemented in marble.js, just not wired here.)
+      const imagePath = null;
       try {
-        const res = await generateRoomWorld({ room, config, outDir, appRelDir, stream });
+        const res = await generateRoomWorld({ room, config, outDir, appRelDir, stream, imagePath });
         room.worldId = res.worldId;
         room.splatUrl = res.splatUrl;
         room.splatUrlLow = res.splatUrlLow;
         room.colliderUrl = res.colliderUrl;
       } catch (err) {
         console.error(`[marble] room "${room.id}" failed — leaving stand-in world. ${err.message}`);
-      }
-    }
-
-    // 4b. TRIPO objects — every memory across the WHOLE merged palace (new
-    // rooms and memories freshly appended to existing rooms alike) that has
-    // an objectPrompt but no modelUrl yet gets a real GLB generated, up to
-    // maxObjectsPerRoom per room (existing rooms get topped up toward the cap,
-    // not re-capped from zero). Cached + idempotent: a memory whose GLB
-    // already exists on disk is skipped. --max-objects is an extra ceiling on
-    // the whole run, on top of the per-room cap.
-    const maxObjects = args.opts["max-objects"] ? parseInt(args.opts["max-objects"], 10) : Infinity;
-    const maxPerRoom = config.tripo?.maxObjectsPerRoom ?? 4;
-    for (const room of merged.rooms) {
-      const outDir = path.join(palaceDir, `room-${room.id}`, "objects");
-      const appRelDir = `${appRelBase}/room-${room.id}/objects`;
-      let roomObjectCount = room.memories.filter((m) => m.modelUrl).length;
-      for (const memory of room.memories) {
-        if (memory.modelUrl || !memory.objectPrompt) continue;
-        const cached = path.join(outDir, `${memory.id}.glb`);
-        if (await exists(cached)) {
-          memory.modelUrl = `${appRelDir}/${memory.id}.glb`;
-          roomObjectCount++;
-          continue;
-        }
-        if (roomObjectCount >= maxPerRoom) {
-          console.log(`[tripo] room "${room.id}" already has ${maxPerRoom} objects — "${memory.id}" stays a placeholder orb.`);
-          continue;
-        }
-        if (objectsGenerated >= maxObjects) {
-          console.log(`[tripo] --max-objects ${maxObjects} reached — "${memory.id}" stays a placeholder orb.`);
-          continue;
-        }
-        objectsGenerated++;
-        try {
-          const res = await generateMemoryObject({ memory, config, outDir, appRelDir });
-          memory.modelUrl = res.modelUrl;
-          roomObjectCount++;
-        } catch (err) {
-          console.error(`[tripo] memory "${memory.id}" failed — leaving placeholder orb. ${err.message}`);
-        }
       }
     }
   }
@@ -249,11 +199,7 @@ async function main() {
   console.log(`\n✓ Wrote palace-schema.json (${merged.rooms.length} room(s) total, ` +
     `${merged.rooms.reduce((n, r) => n + r.memories.length, 0)} memories).`);
   console.log(`  palace:  ${name}  (${schemaPath})`);
-  if (!doGenerate) {
-    console.log(`  worlds:  stand-in (run with --generate to create Marble worlds + TRIPO objects).`);
-  } else {
-    console.log(`  objects: ${objectsGenerated} generated this run.`);
-  }
+  if (!doGenerate) console.log(`  worlds:  stand-in (run with --generate to create Marble worlds).`);
   console.log("");
 }
 
