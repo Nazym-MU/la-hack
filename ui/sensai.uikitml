@@ -1,71 +1,63 @@
 <style>
   .panel-container {
-    align-items: center;
-    padding: 3;
-    width: 55;
+    padding: 2.5;
+    width: 46;
     display: flex;
     flex-direction: column;
-    background-color: #0d0221;
-    border-color: #7b2ff2;
-    border-width: 0.2;
-    border-radius: 2;
+    background-color: #1c1b1a;
+    border-color: #3a3733;
+    border-width: 0.15;
+    border-radius: 1.5;
   }
 
-  .heading {
-    font-size: 3;
-    color: #ffffff;
-    font-weight: bold;
-    text-align: center;
-  }
-
-  .sub-heading {
-    font-size: 1.6;
-    color: #c4b5fd;
-    text-align: center;
-    margin-top: 0.5;
-  }
-
-  .divider {
-    width: 80%;
-    height: 0.1;
-    margin-top: 1.5;
-    margin-bottom: 1.5;
-    background-color: #7b2ff2;
+  .header-row {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .memory-title {
-    font-size: 2.2;
-    color: #fbbf24;
-    text-align: center;
-    font-weight: bold;
+    font-size: 2;
+    color: #e8e6e1;
+    font-weight: medium;
+  }
+
+  #close-button {
+    font-size: 2;
+    color: #8a8579;
+    padding: 0.5;
+    cursor: pointer;
+  }
+
+  .divider {
+    width: 100%;
+    height: 0.08;
+    margin-top: 1;
+    margin-bottom: 1;
+    background-color: #3a3733;
   }
 
   .memory-text {
-    font-size: 1.5;
-    color: #e5e7eb;
-    text-align: center;
-    margin-top: 1;
+    font-size: 1.4;
+    color: #b8b3ab;
+    text-align: left;
   }
 
-  #xr-button {
-    width: 100%;
-    padding: 1.5;
-    margin-top: 2;
-    background-color: #fbbf24;
-    color: #0d0221;
-    border-radius: 1.5;
-    border-width: 0;
-    font-size: 2.2;
-    font-weight: bold;
-    text-align: center;
-    cursor: pointer;
+  .memory-date {
+    font-size: 1.05;
+    color: #6f6a5e;
+    margin-top: 0.8;
+    text-align: left;
   }
 </style>
 <div class="panel-container">
-  <span class="heading">Mind Palace</span>
-  <span class="sub-heading">Select a memory to remember</span>
+  <div class="header-row">
+    <span id="memory-title" class="memory-title">A memory</span>
+    <span id="close-button">×</span>
+  </div>
   <div class="divider"></div>
-  <span id="memory-title" class="memory-title">A place to begin</span>
-  <span id="memory-text" class="memory-text">Walk up to a glowing orb and press it to resurface the moment it holds.</span>
-  <button id="xr-button">Enter XR</button>
+  <span id="memory-text" class="memory-text"></span>
+  <span id="memory-date" class="memory-date"></span>
 </div>

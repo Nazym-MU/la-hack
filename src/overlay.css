@@ -1,0 +1,307 @@
+/* Soft "liquid glass" overlay — dim, translucent, dreamlike. Everything is
+   pointer-events:none by default; interactive children opt back in. */
+
+#mp-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+    sans-serif;
+  color: rgba(255, 255, 255, 0.92);
+  -webkit-font-smoothing: antialiased;
+}
+#mp-overlay * {
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.mp-glass {
+  background: rgba(30, 28, 40, 0.38);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 22px;
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.mp-hidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translate(var(--mp-tx, 0), 10px);
+}
+
+/* ---------- floating add button ---------- */
+#mp-add-btn {
+  position: absolute;
+  right: 28px;
+  bottom: 28px;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(40, 36, 56, 0.42);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 28px;
+  font-weight: 200;
+  line-height: 1;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.35);
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+#mp-add-btn:hover {
+  transform: scale(1.07);
+  background: rgba(120, 110, 180, 0.35);
+}
+
+/* ---------- memory card (appears only on object click) ---------- */
+#mp-card {
+  --mp-tx: -50%;
+  position: absolute;
+  left: 50%;
+  bottom: 32px;
+  transform: translate(-50%, 0);
+  width: min(320px, 86vw);
+  padding: 16px 18px 13px;
+  pointer-events: auto;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+#mp-card-title {
+  margin: 0 24px 6px 0;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+#mp-card-note {
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.55;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.68);
+}
+#mp-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#mp-card-date {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.03em;
+}
+#mp-card-move {
+  border: none;
+  background: none;
+  padding: 4px 2px;
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: rgba(200, 195, 235, 0.75);
+  cursor: pointer;
+}
+#mp-card-move:hover {
+  color: rgba(225, 220, 255, 0.95);
+}
+#mp-card-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: none;
+  background: none;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+}
+#mp-card-close:hover {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ---------- add-memory modal ---------- */
+#mp-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 6, 14, 0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  pointer-events: auto;
+  transition: opacity 0.3s ease;
+}
+#mp-modal {
+  width: min(400px, 92vw);
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 24px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+#mp-modal h2 {
+  margin: 0 0 2px;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+#mp-modal .mp-sub {
+  margin: -8px 0 2px;
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.5);
+}
+#mp-modal label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 11.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+#mp-modal input[type="text"],
+#mp-modal input[type="date"],
+#mp-modal textarea {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 13.5px;
+  font-weight: 300;
+  padding: 10px 12px;
+  outline: none;
+  resize: none;
+  color-scheme: dark;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+#mp-modal input:focus,
+#mp-modal textarea:focus {
+  border-color: rgba(180, 170, 240, 0.45);
+  background: rgba(255, 255, 255, 0.09);
+}
+#mp-modal textarea {
+  min-height: 58px;
+  line-height: 1.5;
+}
+#mp-modal ::placeholder {
+  color: rgba(255, 255, 255, 0.28);
+}
+.mp-row {
+  display: flex;
+  gap: 12px;
+}
+.mp-row > label {
+  flex: 1;
+  min-width: 0;
+}
+#mp-in-image {
+  display: none;
+}
+#mp-image-btn {
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 12.5px;
+  font-weight: 300;
+  padding: 10px 12px;
+  cursor: pointer;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+#mp-image-btn:hover {
+  border-color: rgba(180, 170, 240, 0.45);
+  color: rgba(255, 255, 255, 0.8);
+}
+.mp-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
+}
+.mp-actions button {
+  border-radius: 999px;
+  padding: 9px 20px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+#mp-cancel {
+  border: none;
+  background: none;
+  color: rgba(255, 255, 255, 0.5);
+}
+#mp-cancel:hover {
+  color: rgba(255, 255, 255, 0.85);
+}
+#mp-generate {
+  border: 1px solid rgba(190, 180, 250, 0.35);
+  background: rgba(150, 140, 220, 0.28);
+  color: rgba(245, 243, 255, 0.95);
+  font-weight: 400;
+}
+#mp-generate:hover {
+  background: rgba(165, 155, 235, 0.4);
+  transform: translateY(-1px);
+}
+#mp-generate:disabled {
+  opacity: 0.5;
+  cursor: default;
+  transform: none;
+}
+
+/* ---------- toast + placement hint ---------- */
+#mp-toast,
+#mp-place-hint {
+  --mp-tx: -50%;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.8);
+  pointer-events: auto;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  white-space: nowrap;
+}
+#mp-toast {
+  top: 24px;
+}
+#mp-place-hint {
+  bottom: 32px;
+  pointer-events: none;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.mp-spinner {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-top-color: rgba(210, 200, 255, 0.9);
+  animation: mp-spin 0.9s linear infinite;
+  flex: none;
+}
+.mp-spinner.mp-hidden {
+  display: none;
+}
+@keyframes mp-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -30,10 +30,16 @@ Built on the SensAI `sensai-webxr-worldmodels` template (kept as git remote
 ```bash
 npm run dev      # https://localhost:8081  (mkcert; WebXR needs https)
 npm run build && npm run preview
+
+# TRIPO backend (needed for the "+ new memory" generate flow):
+cd server && npm install
+# paste your key into server/.env (TRIPO_API_KEY=...), then:
+npm run dev      # http://localhost:8090; vite proxies /api -> here
 ```
 
-Open in a desktop browser: the IWER headset simulator is injected so you can
-emulate a Quest/PICO without hardware. Click "Enter XR" on the panel.
+Open in a desktop browser — flat-desktop is the primary flow (OrbitControls +
+mouse picking). The IWER headset simulator is still injected if XR testing is
+needed. NOTE: vite auto-bumps the port if 8081 is taken — check the console.
 
 ## Environment gotchas (already solved — don't re-hit these)
 
@@ -56,8 +62,16 @@ emulate a Quest/PICO without hardware. Click "Enter XR" on the panel.
 - `src/memoryObjects.ts` — spawns an interactable object per memory.
 - `src/gaussianSplatLoader.ts` — `GaussianSplatLoader` component/system (kit).
   Set `splatUrl` on the entity to load a Marble world.
-- `src/uiPanel.ts` + `ui/*.uikitml` — spatial UI panel (compiled to
-  `public/ui/*.json`). Shows memory text.
+- `src/overlay.ts` + `src/overlay.css` — the flat-browser UI: glass memory
+  card (appears only on object click), "+" button, add-memory modal, TRIPO
+  generate→place flow. Pure DOM; the old uikitml panel was removed.
+- `src/placement.ts` — desktop placement mode: object ghosts along the y=0
+  floor plane following the mouse; click places, Escape cancels. Also used by
+  the card's "move" button.
+- `src/generation.ts` — client of the TRIPO server; polls until a GLB URL
+  arrives (routed through `/api/model` proxy so CDN CORS can't bite).
+- `server/index.js` — Express app holding the TRIPO key (`server/.env`).
+  text_to_model + image_to_model (photo upload) + GLB proxy.
 - `public/splats/` — bundled `sensai.spz` placeholder world.
 
 ## Data contract (the spine)
@@ -74,7 +88,11 @@ interface Palace { title; splatUrl?; memories: Memory[] }
 ```
 
 Object positions are **authored**, not derived from splat geometry — a Gaussian
-splat has no queryable surfaces, so place objects on a fixed ring/path.
+splat has no queryable surfaces. At runtime, placement raycasts the mouse onto
+the y=0 floor plane (`src/placement.ts`); TRIPO has zero spatial awareness, so
+placement is always ours. TRIPO GLBs are normalized (largest dimension ≈0.6m,
+origin at the base) by `loadMemoryModel()`; `Memory.scale` is a **multiplier**
+on that normalized size, not an absolute scale.
 
 ## Where teammates plug in (the two seams)
 
@@ -91,15 +109,14 @@ splat has no queryable surfaces, so place objects on a fixed ring/path.
 
 ## Interaction
 
-IWSDK marks interactable entities with `Pressed`/`Hovered` state-tag components
-(from `@iwsdk/core` input system). `MemorySystem` reacts on the rising edge of
-`Pressed` and writes the memory's label/note/date into the panel.
-
-**KNOWN GAP (P1):** IWSDK has no desktop-mouse picking — 3D-object clicking only
-works through the XR/IWER-simulator pointer ray, not a plain browser mouse
-click. Flat-desktop navigation + pointer raycast is unbuilt. Until then, test
-interaction inside the IWER simulator session. Panels (ScreenSpace) still work
-in the flat browser view.
+Desktop (primary): OrbitControls + canvas raycast (`src/desktopControls.ts`)
+turn a clean click into a selection; `MemorySystem` also reacts to the rising
+edge of IWSDK's `Pressed` tag for XR. Either path calls the handler registered
+via `onMemorySelected()` — the DOM glass card in `src/overlay.ts`. The card is
+hidden until an object is clicked; "move" re-enters placement mode for that
+object. The DOM overlay does not render inside a headset — if XR becomes a
+demo target again, resurrect the uikitml panel from git history (removed in
+this branch).
 
 ## Demo safety
 
