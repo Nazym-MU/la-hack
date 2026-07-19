@@ -243,6 +243,38 @@
 #mp-build-files::file-selector-button:hover {
   background: rgba(165, 155, 235, 0.4);
 }
+#mp-build-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+#mp-build-gallery:empty {
+  display: none;
+}
+.mp-tile {
+  width: 74px;
+  height: 74px;
+  padding: 0;
+  border: 2px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.04);
+  transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+.mp-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.mp-tile:hover {
+  transform: translateY(-1px);
+}
+.mp-tile.selected {
+  border-color: rgba(190, 180, 250, 0.9);
+  box-shadow: 0 0 0 2px rgba(150, 140, 220, 0.4);
+}
 #mp-build-cancel {
   border: none;
   background: none;

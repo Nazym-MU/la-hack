@@ -13,7 +13,11 @@ export function initUploadPanel(): void {
       <div id="mp-build-modal" class="mp-glass">
         <h2>Build a palace</h2>
         <p class="mp-sub">Upload a few photos (notes optional). They're clustered and added to the palace — either into a room that already fits, or a new one. Takes a few minutes.</p>
-        <label>Photos
+        <label id="mp-build-gallery-label" class="mp-hidden">Pick pictures
+          <span style="text-transform:none;opacity:.6">(tap to select)</span>
+        </label>
+        <div id="mp-build-gallery"></div>
+        <label>Or upload photos
           <input id="mp-build-files" type="file" accept="image/*" multiple />
         </label>
         <label>Notes <span style="text-transform:none;opacity:.6">(optional)</span>
@@ -35,11 +39,52 @@ export function initUploadPanel(): void {
   const notes = el<HTMLTextAreaElement>("mp-build-notes");
   const goBtn = el<HTMLButtonElement>("mp-build-go");
   const logBox = el<HTMLPreElement>("mp-build-log");
+  const gallery = el<HTMLDivElement>("mp-build-gallery");
+  const galleryLabel = el<HTMLLabelElement>("mp-build-gallery-label");
+  const picked = new Set<string>();
+  let galleryLoaded = false;
   let busy = false;
   let currentJobId: string | null = null;
   let currentEs: EventSource | null = null;
 
-  const open = () => backdrop.classList.remove("mp-hidden");
+  // Show the pictures sitting in input/ as tap-to-select tiles (no OS file
+  // picker needed). Loaded once, the first time the modal opens.
+  const loadGallery = async () => {
+    if (galleryLoaded) return;
+    galleryLoaded = true;
+    try {
+      const r = await fetch("/api/input-images");
+      const imgs: Array<{ name: string }> = (await r.json()).images ?? [];
+      if (!imgs.length) return;
+      galleryLabel.classList.remove("mp-hidden");
+      for (const { name } of imgs) {
+        const tile = document.createElement("button");
+        tile.type = "button";
+        tile.className = "mp-tile";
+        const img = document.createElement("img");
+        img.src = `/api/input-image/${encodeURIComponent(name)}`;
+        img.alt = name;
+        tile.appendChild(img);
+        tile.addEventListener("click", () => {
+          if (picked.has(name)) {
+            picked.delete(name);
+            tile.classList.remove("selected");
+          } else {
+            picked.add(name);
+            tile.classList.add("selected");
+          }
+        });
+        gallery.appendChild(tile);
+      }
+    } catch {
+      galleryLoaded = false; // let a retry re-fetch on next open
+    }
+  };
+
+  const open = () => {
+    backdrop.classList.remove("mp-hidden");
+    void loadGallery();
+  };
   const close = () => {
     if (!busy) backdrop.classList.add("mp-hidden");
   };
@@ -78,8 +123,8 @@ export function initUploadPanel(): void {
   goBtn.addEventListener("click", async () => {
     if (busy) return;
     const fileList = Array.from(filesInput.files ?? []);
-    if (!fileList.length && !notes.value.trim()) {
-      appendLog("Add at least one photo or some notes.");
+    if (!fileList.length && picked.size === 0 && !notes.value.trim()) {
+      appendLog("Pick or upload at least one photo, or add notes.");
       return;
     }
     busy = true;
@@ -88,7 +133,7 @@ export function initUploadPanel(): void {
     logBox.textContent = "";
 
     try {
-      appendLog(`reading ${fileList.length} photo(s)…`);
+      appendLog(`${picked.size} picked + ${fileList.length} uploaded photo(s)…`);
       const files = await Promise.all(
         fileList.map(
           (f) =>
@@ -105,7 +150,7 @@ export function initUploadPanel(): void {
       const res = await fetch("/api/build-palace", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ files, notes: notes.value, provider: "gemini" }),
+        body: JSON.stringify({ files, inputFiles: [...picked], notes: notes.value, provider: "gemini" }),
       });
       const j = await res.json();
       if (!res.ok || !j.jobId) throw new Error(j.error ?? "the build didn't start");

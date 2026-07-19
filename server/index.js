@@ -174,11 +174,31 @@ function extractModelUrl(output) {
 const pipelineDir = path.resolve(__dirname, "../pipeline");
 const rootEnv = path.resolve(__dirname, "../.env");
 const uploadsBase = path.resolve(__dirname, ".uploads");
+const inputDir = path.resolve(__dirname, "../input"); // pre-loaded demo pictures
 const jobs = new Map();
+const isImageName = (n) => /\.(jpe?g|png|webp|gif)$/i.test(n) && !n.startsWith(".");
+
+// List pictures sitting in input/ so the UI can offer them as a pick-from
+// gallery (no OS file picker needed for the demo).
+app.get("/api/input-images", async (_req, res) => {
+  const names = (await fsp.readdir(inputDir).catch(() => [])).filter(isImageName);
+  res.json({ images: names.map((name) => ({ name })) });
+});
+
+// Serve one input/ image (thumbnail/preview). Name sanitized to a basename.
+app.get("/api/input-image/:name", (req, res) => {
+  const file = path.join(inputDir, path.basename(req.params.name));
+  if (!file.startsWith(inputDir)) return res.status(400).end();
+  res.sendFile(file, (err) => {
+    if (err) res.status(404).end();
+  });
+});
 
 app.post("/api/build-palace", async (req, res) => {
-  const { files, notes, provider } = req.body ?? {};
-  if ((!Array.isArray(files) || files.length === 0) && !(notes && notes.trim())) {
+  const { files, inputFiles, notes, provider } = req.body ?? {};
+  const hasUploads = Array.isArray(files) && files.length > 0;
+  const hasPicked = Array.isArray(inputFiles) && inputFiles.length > 0;
+  if (!hasUploads && !hasPicked && !(notes && notes.trim())) {
     return res.status(400).json({ error: "Provide at least one photo or some notes." });
   }
   try {
@@ -194,6 +214,12 @@ app.post("/api/build-palace", async (req, res) => {
       const ext = m[1] === "jpeg" ? "jpg" : m[1];
       const base = path.basename(f.name || `photo-${n}`).replace(/[^\w.\-]+/g, "_") || `photo-${n}.${ext}`;
       await fsp.writeFile(path.join(jobDir, base), Buffer.from(m[2], "base64"));
+    }
+    // Pictures picked from the input/ gallery — copy them straight in.
+    for (const name of inputFiles ?? []) {
+      const safe = path.basename(String(name));
+      if (!isImageName(safe)) continue;
+      await fsp.copyFile(path.join(inputDir, safe), path.join(jobDir, safe)).then(() => n++).catch(() => {});
     }
     if (notes && typeof notes === "string" && notes.trim()) {
       await fsp.writeFile(path.join(jobDir, "notes.txt"), notes.trim());
