@@ -69,20 +69,19 @@ The idea starts with a question: how can we locate information in our minds, bui
 
 
 # Demo walkthrough 
-a few annotated screenshots of the generated room, the manifest JSON, the voice interaction — captioned, not narrated at length.
-
-
 <details>
 <summary>Pics/Screenshots of Demo</summary>
 
-<p>Here is a quick look at MindSpace in action. The first picture shows the upload dialogue, where you drop in your photos and notes to start building your world. The second picture shows the dialogue for adding an object, where a single memory becomes a small item you can place inside a room. The remaining pictures show real examples of what MindSpace generated, the rooms it built and the memories placed inside them, ready to walk through and explore.</p>
-
+<p>Here is a quick look at MindSpace in action. The first picture shows the upload dialogue, where you drop in your photos and notes to start building your world. </p> 
 <p align="center">
   <img src="assets/demo-walkthrough4.png" alt="demo-walkthrough">
 </p>
+<p> The second picture shows the dialogue for adding an object, where a single memory becomes a small item you can place inside a room. </p>
 <p align="center">
   <img src="assets/demo-walkthrough5.png" alt="demo-walkthrough">
 </p>
+
+<p> </p>The remaining pictures show real examples of what MindSpace generated, the rooms it built and the memories placed inside them, ready to walk through and explore.</p>
 <p align="center">
   <img src="assets/demo-walkthrough1.png" alt="demo-walkthrough">
 </p>
