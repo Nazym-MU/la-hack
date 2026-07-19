@@ -79,8 +79,9 @@ a few annotated screenshots of the generated room, the manifest JSON, the voice 
 
 </details>
 
-# How it works 
-— a simple architecture diagram (curator → WorldLabs → manifest → overlay) as an image, plus a short code block showing the system prompt or manifest format. This is where technical judges actually look.
+# How it works
+
+Under the hood, MindSpace isn't a chatbot, it's a small pipeline. When you upload photos or notes, an **LLM agent** reads through everything and decides how it should be organized: does this belong in a room that already exists, or is it something new? The same way you'd naturally group a trip, a person, or an event in your head, rather than a folder of files. For every new room, the agent writes a short text description of the space, and **World Labs' Marble** model turns that description into a real, walkable 3D environment, a **Gaussian splat**, which is essentially a cloud of millions of colored points instead of a traditional 3D mesh, so it can look photorealistic without anyone modeling it by hand. Your actual memories then become small 3D objects placed inside that room at eye level, so you can walk up to one and click it to read what it means. Everything renders in the browser over **WebXR**, so the same world works on a laptop with a mouse or in a VR headset, no extra software needed.
 
 # Tech Stack
 
