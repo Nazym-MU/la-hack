@@ -7,7 +7,7 @@ export function initUploadPanel(): void {
   const root = document.createElement("div");
   root.id = "mp-build";
   root.innerHTML = /* html */ `
-    <button id="mp-build-btn" title="Build a palace from your photos">✦ build from photos</button>
+    <button id="mp-build-btn" title="Build a palace from your photos">✦&nbsp;Build from photos</button>
     <div id="mp-build-backdrop" class="mp-hidden">
       <div id="mp-build-modal" class="mp-glass">
         <h2>Build a palace</h2>
