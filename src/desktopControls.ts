@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { VisibilityState, World } from "@iwsdk/core";
 import { memoryMeshes, requestMemory } from "./memoryObjects.js";
+import { isPlacing } from "./placement.js";
 
 // Non-immersive navigation + picking. IWSDK ships neither for the flat browser
 // view, so we add OrbitControls (look/zoom around the palace) and a canvas
@@ -35,6 +36,7 @@ export function enableDesktopControls(world: World): void {
   });
 
   dom.addEventListener("pointerup", (e) => {
+    if (isPlacing()) return; // placement mode owns this click
     if (Math.hypot(e.clientX - downX, e.clientY - downY) > CLICK_SLOP_PX) return;
 
     const rect = dom.getBoundingClientRect();

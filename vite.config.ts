@@ -55,7 +55,15 @@ export default defineConfig({
     },
     dedupe: ["three"],
   },
-  server: { host: "0.0.0.0", port: 8081, open: true },
+  server: {
+    host: "0.0.0.0",
+    port: 8081,
+    open: true,
+    // TRIPO key lives in server/ (port 8090); the frontend only ever calls /api.
+    proxy: {
+      "/api": { target: "http://localhost:8090", changeOrigin: true },
+    },
+  },
   build: {
     outDir: "dist",
     sourcemap: process.env.NODE_ENV !== "production",

@@ -5,17 +5,11 @@ import {
   createSystem,
   Interactable,
   Mesh,
-  PanelDocument,
-  PanelUI,
   Pressed,
   Types,
-  UIKit,
-  UIKitDocument,
   World,
-  eq,
 } from "@iwsdk/core";
 import { SEED_PALACE, type Memory } from "./memories.js";
-import { showPanel } from "./uiPanel.js";
 
 // Tag component linking an interactable entity back to its Memory by id.
 export const MemoryObject = createComponent("MemoryObject", {
@@ -32,27 +26,38 @@ export function getMemory(id: string): Memory | undefined {
 // Placed object roots, for desktop raycast picking. Each carries its memory id
 // in userData.memoryId.
 export const memoryMeshes: THREE.Object3D[] = [];
+const objects3D = new Map<string, THREE.Object3D>();
+export function getMemoryObject3D(id: string): THREE.Object3D | undefined {
+  return objects3D.get(id);
+}
 
-// Desktop (mouse) selection funnels through here; MemorySystem drains it so the
-// panel is written in exactly one place, whatever triggered the selection.
+// Desktop (mouse) selection funnels through here; MemorySystem drains it so
+// selection is handled in exactly one place, whatever triggered it.
 let requestedMemoryId: string | null = null;
 export function requestMemory(id: string): void {
   requestedMemoryId = id;
 }
 
+// The overlay registers itself here; MemorySystem calls it on any selection
+// (XR press or desktop click). Replaces the old uikitml panel writes.
+let memorySelectedHandler: (memory: Memory) => void = () => {};
+export function onMemorySelected(handler: (memory: Memory) => void): void {
+  memorySelectedHandler = handler;
+}
+
 const gltfLoader = new GLTFLoader();
 
 // Calm placeholder orb, used until a real TRIPO GLB is supplied.
-function makeOrb(memory: Memory): THREE.Mesh {
-  const color = new THREE.Color(memory.color ?? 0x6b7fa8);
+export function makeOrb(color?: number, scale?: number): THREE.Mesh {
+  const tint = new THREE.Color(color ?? 0x6b7fa8);
   const material = new THREE.ShaderMaterial({
     transparent: true,
     depthTest: false,
     depthWrite: false,
     side: THREE.DoubleSide,
     uniforms: {
-      uColor: { value: color },
-      uRimColor: { value: color.clone().lerp(new THREE.Color(0xffffff), 0.25) },
+      uColor: { value: tint },
+      uRimColor: { value: tint.clone().lerp(new THREE.Color(0xffffff), 0.25) },
     },
     vertexShader: /* glsl */ `
       varying vec3 vNormal;
@@ -79,40 +84,73 @@ function makeOrb(memory: Memory): THREE.Mesh {
   });
   const orb = new Mesh(new THREE.SphereGeometry(0.2, 48, 48), material);
   orb.renderOrder = 999;
+  if (scale) orb.scale.setScalar(scale);
   return orb;
 }
 
-// THE object seam. Places one memory in the world at runtime.
-//  - If memory.modelUrl is set, loads that GLB (TRIPO output).
-//  - Otherwise renders the placeholder orb.
-// The entity is interactable and resolvable back to its Memory on press.
-export async function addMemoryObject(
+// Loads a TRIPO GLB and normalizes it for the palace: scaled so its largest
+// dimension is ~0.6m (times the memory's optional scale multiplier) and
+// re-origined so the returned group's origin sits at the model's base —
+// placing the group at floor height makes the object stand on the floor.
+export async function loadMemoryModel(
+  url: string,
+  scaleMultiplier = 1,
+): Promise<THREE.Object3D> {
+  const gltf = await gltfLoader.loadAsync(url);
+  const inner = gltf.scene;
+
+  const box = new THREE.Box3().setFromObject(inner);
+  const size = box.getSize(new THREE.Vector3());
+  const maxDim = Math.max(size.x, size.y, size.z) || 1;
+  const s = (0.6 / maxDim) * scaleMultiplier;
+  inner.scale.setScalar(s);
+  inner.position.set(
+    -((box.min.x + box.max.x) / 2) * s,
+    -box.min.y * s,
+    -((box.min.z + box.max.z) / 2) * s,
+  );
+
+  const group = new THREE.Group();
+  group.add(inner);
+  return group;
+}
+
+// Registers an already-built object as a memory: entity + interactable +
+// picking + registry. Used directly by the placement flow (which pre-loads
+// the object to preview it) and by addMemoryObject below.
+export function addPlacedMemory(
   world: World,
   memory: Memory,
-): Promise<void> {
+  object3D: THREE.Object3D,
+): void {
   const resolved: Memory = {
     ...memory,
     dateGenerated: memory.dateGenerated ?? new Date().toISOString(),
   };
   memoryRegistry.set(resolved.id, resolved);
 
-  let object3D: THREE.Object3D;
-  if (resolved.modelUrl) {
-    const gltf = await gltfLoader.loadAsync(resolved.modelUrl);
-    object3D = gltf.scene;
-    object3D.scale.setScalar(resolved.scale ?? 1);
-  } else {
-    object3D = makeOrb(resolved);
-    if (resolved.scale) object3D.scale.setScalar(resolved.scale);
-  }
   object3D.position.set(...resolved.position);
   object3D.userData.memoryId = resolved.id;
   memoryMeshes.push(object3D);
+  objects3D.set(resolved.id, object3D);
 
   world
     .createTransformEntity(object3D)
     .addComponent(Interactable)
     .addComponent(MemoryObject, { memoryId: resolved.id });
+}
+
+// THE object seam. Places one memory in the world at runtime.
+//  - If memory.modelUrl is set, loads that GLB (TRIPO output), normalized.
+//  - Otherwise renders the placeholder orb.
+export async function addMemoryObject(
+  world: World,
+  memory: Memory,
+): Promise<void> {
+  const object3D = memory.modelUrl
+    ? await loadMemoryModel(memory.modelUrl, memory.scale ?? 1)
+    : makeOrb(memory.color, memory.scale);
+  addPlacedMemory(world, memory, object3D);
 }
 
 // Places every memory in the seed palace. Orbs render immediately; any GLBs
@@ -125,14 +163,10 @@ export function spawnMemoryObjects(world: World): void {
   }
 }
 
-// Reacts to a memory object being pressed (rising edge) and pushes its label,
-// note, and date into the spatial panel.
+// Reacts to a memory object being pressed (rising edge) or clicked on desktop
+// and hands the memory to whoever registered via onMemorySelected().
 export class MemorySystem extends createSystem({
   memories: { required: [Interactable, MemoryObject] },
-  panels: {
-    required: [PanelUI, PanelDocument],
-    where: [eq(PanelUI, "config", "./ui/sensai.json")],
-  },
 }) {
   private prevPressed = new Set<number>();
 
@@ -146,7 +180,7 @@ export class MemorySystem extends createSystem({
 
       const id = entity.getValue(MemoryObject, "memoryId") as string;
       const memory = getMemory(id);
-      if (memory) this.showMemory(memory);
+      if (memory) memorySelectedHandler(memory);
     });
 
     this.prevPressed = nowPressed;
@@ -155,26 +189,7 @@ export class MemorySystem extends createSystem({
     if (requestedMemoryId) {
       const memory = getMemory(requestedMemoryId);
       requestedMemoryId = null;
-      if (memory) this.showMemory(memory);
+      if (memory) memorySelectedHandler(memory);
     }
-  }
-
-  private showMemory(memory: Memory): void {
-    const date = memory.dateGenerated
-      ? new Date(memory.dateGenerated).toLocaleDateString()
-      : "";
-
-    this.queries.panels.entities.forEach((panel) => {
-      const doc = PanelDocument.data.document[panel.index] as UIKitDocument;
-      if (!doc) return;
-      const title = doc.getElementById("memory-title") as UIKit.Text | null;
-      const text = doc.getElementById("memory-text") as UIKit.Text | null;
-      const dateEl = doc.getElementById("memory-date") as UIKit.Text | null;
-      title?.setProperties({ text: memory.label });
-      text?.setProperties({ text: memory.note ?? "" });
-      dateEl?.setProperties({ text: date });
-    });
-
-    showPanel();
   }
 }
