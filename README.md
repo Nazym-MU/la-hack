@@ -71,11 +71,25 @@ The idea starts with a question: how can we locate information in our minds, bui
 # Demo walkthrough 
 a few annotated screenshots of the generated room, the manifest JSON, the voice interaction — captioned, not narrated at length.
 
+
 <details>
-<summary>Full architecture writeup</summary>
+<summary>Pics/Screenshots of Demo</summary>
 
-...longer content here...
-
+<p align="center">
+  <img src="assets/demo-walkthrough1.png" alt="demo-walkthrough">
+</p>
+<p align="center">
+  <img src="assets/demo-walkthrough2.png" alt="demo-walkthrough">
+</p>
+<p align="center">
+  <img src="assets/demo-walkthrough3.png" alt="demo-walkthrough">
+</p>
+<p align="center">
+  <img src="assets/demo-walkthrough4.png" alt="demo-walkthrough">
+</p>
+<p align="center">
+  <img src="assets/demo-walkthrough5.png" alt="demo-walkthrough">
+</p>
 </details>
 
 # How it works
