@@ -75,7 +75,10 @@ export const PALACE_DRAFT_SCHEMA = {
                 position: {
                   type: "array",
                   items: { type: "number" },
-                  description: "Room-local [x, y, z] in metres. x/z within ~3m of centre, y in 0.8-1.8.",
+                  description:
+                    "Room-local [x, y, z] in metres. x/z within ~3m of centre. y=0 is roughly eye " +
+                    "level (the room origin is the Marble capture eye) — keep objects at a natural " +
+                    "eye-level height, roughly -0.1 to 0.9, not floating up near the ceiling.",
                 },
               },
             },
@@ -97,9 +100,12 @@ function normalizePosition(pos, index) {
   // Spread memories on a ring as a fallback when the model gives junk.
   const angle = (index * 2 * Math.PI) / 5;
   const x = Number.isFinite(p[0]) ? p[0] : Math.cos(angle) * 1.6;
-  const y = Number.isFinite(p[1]) ? p[1] : 1.3;
+  // y=0 is roughly eye level (the room origin is the Marble capture eye —
+  // see rooms.ts's spawn comment). -0.5..0.5 read as too low in practice, so
+  // the usable band sits a bit above that.
+  const y = Number.isFinite(p[1]) ? p[1] : 0.3;
   const z = Number.isFinite(p[2]) ? p[2] : Math.sin(angle) * 1.6 - 1.2;
-  return [clamp(x, -3.5, 3.5), clamp(y, 0.6, 2.2), clamp(z, -3.5, 3.5)];
+  return [clamp(x, -3.5, 3.5), clamp(y, -0.1, 0.9), clamp(z, -3.5, 3.5)];
 }
 
 let colorCursor = 0;
