@@ -87,6 +87,26 @@ export function createRoomManager(world: World, palace: Palace): RoomManager {
     splat.object3D.quaternion.setFromEuler(new THREE.Euler(rx, 0, rz));
   };
 
+  // Serialize EVERY splat load through one chain. GaussianSplatLoaderSystem.load
+  // is not safe to call concurrently on the same entity — two overlapping loads
+  // each add a splat but only the last is tracked for removal, so the other
+  // leaks and rooms overlay. Loads whose room was superseded are skipped.
+  let loadChain: Promise<void> = Promise.resolve();
+  const queueLoad = (token: number, url: string, mesh: string): Promise<void> => {
+    loadChain = loadChain.then(async () => {
+      if (token !== showToken || !splat) return; // room changed before our turn
+      splat.setValue(GaussianSplatLoader, "splatUrl", url);
+      splat.setValue(GaussianSplatLoader, "meshUrl", mesh);
+      try {
+        await splatSystem.load(splat);
+        if (token === showToken) applyFlip();
+      } catch (err) {
+        console.error(`[rooms] splat load failed (${url}):`, err);
+      }
+    });
+    return loadChain;
+  };
+
   async function show(i: number) {
     if (i === index || switching || i < 0 || i >= rooms.length) return;
     switching = true;
@@ -115,8 +135,9 @@ export function createRoomManager(world: World, palace: Palace): RoomManager {
         );
       }
 
-      // Swap the room's world onto the single splat host. Load the low-res
-      // splat first (fast) when there is one, then upgrade to full res below.
+      // Swap the room's world onto the single splat host: low-res first (fast),
+      // then upgrade to full res. Both go through queueLoad so they never
+      // overlap (which is what made rooms render on top of each other).
       const high = room.splatUrl || BUNDLED_STANDIN;
       const low = room.splatUrlLow;
       const first = low ?? high;
@@ -125,15 +146,10 @@ export function createRoomManager(world: World, palace: Palace): RoomManager {
 
       if (!splat) {
         splat = world.createTransformEntity();
-        splat.addComponent(GaussianSplatLoader, mesh ? { splatUrl: first, meshUrl: mesh } : { splatUrl: first });
-      } else {
-        splat.setValue(GaussianSplatLoader, "splatUrl", first);
-        splat.setValue(GaussianSplatLoader, "meshUrl", mesh);
-        await splatSystem.load(splat);
+        // autoLoad off — every load is driven by queueLoad, one at a time.
+        splat.addComponent(GaussianSplatLoader, { splatUrl: first, meshUrl: mesh, autoLoad: false });
       }
-
-      // Apply the current world orientation (cycled live with the 'f' key).
-      applyFlip();
+      await queueLoad(token, first, mesh); // applies the flip on completion
 
       // Spawn at the world origin — the Marble capture eye, i.e. natural human
       // standing height. The flip pivots on the origin, so this stays put
@@ -143,20 +159,9 @@ export function createRoomManager(world: World, palace: Palace): RoomManager {
 
       changeCb(i, room);
 
-      // Progressive upgrade: once the low-res world is showing, swap to full
-      // res in the background (skip if the room changed meanwhile).
-      if (low && high !== low) {
-        void (async () => {
-          try {
-            if (token !== showToken || !splat) return;
-            splat.setValue(GaussianSplatLoader, "splatUrl", high);
-            await splatSystem.load(splat);
-            if (token === showToken) applyFlip();
-          } catch (err) {
-            console.error(`[rooms] high-res upgrade failed for "${room.id}":`, err);
-          }
-        })();
-      }
+      // Progressive upgrade to full res — queued after the low-res load, and
+      // skipped automatically if the room changed before its turn.
+      if (low && high !== low) void queueLoad(token, high, mesh);
     } finally {
       switching = false;
     }
