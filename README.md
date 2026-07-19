@@ -140,5 +140,5 @@ npm run dev              # https://localhost:8081
 cd server && npm run dev # http://localhost:8090
 ```
 # Team + links 
-[![Demo Video](https://img.shields.io/badge/▶-Watch%20Demo-red?style=for-the-badge)](https://your-demo-video-link)
+[![Demo Video](https://img.shields.io/badge/▶-Watch%20Demo-red?style=for-the-badge)](https://youtu.be/9xrII0xIUzk)
 [![Devpost](https://img.shields.io/badge/Devpost-Submission-003E54?style=for-the-badge&logo=devpost&logoColor=white)](https://devpost.com/software/05-kylian-dictator)
