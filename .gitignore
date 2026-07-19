@@ -70,6 +70,19 @@ web_modules/
 .env.*
 !.env.example
 
+# Mind Palace: real personal uploads stay local. The sanitized sample-input/
+# is committed; a private input/ folder is not.
+/input/
+/uploads/
+
+# Generated per-palace working dir (schema copies + any downloaded splats). The
+# ACTIVE palace lives at public/palace-schema.json (committed); splats stream
+# from the World Labs CDN, so nothing large is committed.
+public/palaces/
+
+# macOS
+.DS_Store
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache

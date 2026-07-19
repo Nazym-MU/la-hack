@@ -1,0 +1,186 @@
+{
+  "title": "Memory Palace",
+  "generatedAt": "2026-07-19T04:06:07.653Z",
+  "sourceFolder": "/Users/aminarakhimbergenova/Documents/GitHub/la-hack/sample-input",
+  "agent": {
+    "provider": "openai",
+    "model": "llama-3.3-70b-versatile"
+  },
+  "rooms": [
+    {
+      "id": "room1",
+      "title": "Grandmother's Kitchen",
+      "theme": "Childhood Memories",
+      "marblePrompt": "A warm, yellow-tiled kitchen with a fogged-up window, an old radio on the counter, and an enamel jug filled with wooden spoons on the sill. The air is thick with the smell of freshly baked bread. A low, morning sun casts a warm glow on the scene.",
+      "rationale": "This room is designed to evoke a sense of warmth and comfort, with the yellow tiles and freshly baked bread creating a cozy atmosphere.",
+      "memories": [
+        {
+          "id": "memory1",
+          "label": "Bread Baking",
+          "note": "Sunday mornings spent baking bread with grandmother",
+          "rationale": "Placed on the kitchen counter, where the action of baking took place, with the mixing bowl and utensils nearby",
+          "objectPrompt": "a mixing bowl with a wooden spoon",
+          "sourceRef": "grandmothers-kitchen.md",
+          "position": [
+            0.5,
+            1.2,
+            -1
+          ],
+          "color": 9150420
+        },
+        {
+          "id": "memory2",
+          "label": "Enamel Jug",
+          "note": "Enamel jug filled with wooden spoons on the windowsill",
+          "rationale": "Placed on the windowsill, where the morning light would highlight the jug and its contents",
+          "objectPrompt": "an enamel jug filled with wooden spoons",
+          "sourceRef": "grandmothers-kitchen.md",
+          "position": [
+            -0.8,
+            1,
+            0.5
+          ],
+          "color": 11570121
+        },
+        {
+          "id": "memory3",
+          "label": "Radio",
+          "note": "Old radio that only got one station",
+          "rationale": "Placed on the counter, where it would be easily accessible and visible",
+          "objectPrompt": "an old radio with a wooden cabinet",
+          "sourceRef": "grandmothers-kitchen.md",
+          "position": [
+            0.2,
+            1.1,
+            -0.8
+          ],
+          "color": 13214590
+        }
+      ],
+      "origin": [
+        0,
+        0,
+        0
+      ],
+      "spawn": [
+        0,
+        1.5,
+        0
+      ],
+      "worldId": "1f5c1439-0923-42a3-a6b3-96d839f1267b",
+      "splatUrl": "https://cdn.marble.worldlabs.ai/1f5c1439-0923-42a3-a6b3-96d839f1267b/fa1934a7-24e1-47f5-9eec-7efb67662515_ceramic.spz",
+      "colliderUrl": "https://cdn.marble.worldlabs.ai/1f5c1439-0923-42a3-a6b3-96d839f1267b/82e9c72e.glb"
+    },
+    {
+      "id": "room2",
+      "title": "LA Trip",
+      "theme": "Travel Memories",
+      "marblePrompt": "A sun-bleached boardwalk with a low concrete wall, overlooking the ocean at sunset. The air is filled with the smell of fried dough and the sound of skaters in the distance. A paper kite flies overhead, its tail streaming behind it.",
+      "rationale": "This room is designed to evoke a sense of freedom and relaxation, with the sun-bleached boardwalk and ocean view creating a calming atmosphere.",
+      "memories": [
+        {
+          "id": "memory4",
+          "label": "Sunset",
+          "note": "Watching the sunset over the ocean from a low concrete wall",
+          "rationale": "Placed on the concrete wall, where the view of the sunset would be most prominent",
+          "objectPrompt": "a pair of sunglasses",
+          "sourceRef": "la-trip-day-one.md",
+          "position": [
+            0,
+            1,
+            -2
+          ],
+          "color": 8304806
+        },
+        {
+          "id": "memory5",
+          "label": "Kite",
+          "note": "A man selling paper kites on the boardwalk",
+          "rationale": "Placed near the entrance of the boardwalk, where the kite seller would be most visible",
+          "objectPrompt": "a paper kite",
+          "sourceRef": "la-trip-day-one.md",
+          "position": [
+            -1.2,
+            1.2,
+            0
+          ],
+          "color": 13208475
+        }
+      ],
+      "origin": [
+        14,
+        0,
+        0
+      ],
+      "spawn": [
+        0,
+        1.5,
+        0
+      ],
+      "worldId": "cc37b1c9-1432-471c-b9b9-bf0214e8a4fa",
+      "splatUrl": "https://cdn.marble.worldlabs.ai/cc37b1c9-1432-471c-b9b9-bf0214e8a4fa/b0a824fe-3f3b-45ed-82b3-7f4c08999d5c_ceramic.spz",
+      "colliderUrl": "https://cdn.marble.worldlabs.ai/cc37b1c9-1432-471c-b9b9-bf0214e8a4fa/a89167fc.glb"
+    },
+    {
+      "id": "room3",
+      "title": "Quantum Studies",
+      "theme": "Academic Memories",
+      "marblePrompt": "A quiet, dimly lit study room with a large, wooden desk and a blackboard covered in equations. The air is thick with the smell of old books and the sound of quiet contemplation. A small, copper model of the solar system sits on a nearby plinth.",
+      "rationale": "This room is designed to evoke a sense of focus and intellectual curiosity, with the dimly lit study room and equations on the blackboard creating a contemplative atmosphere.",
+      "memories": [
+        {
+          "id": "memory6",
+          "label": "Entanglement Notes",
+          "note": "Study notes on quantum entanglement",
+          "rationale": "Placed on the wooden desk, where the notes would be most accessible and visible",
+          "objectPrompt": "a stack of notebooks",
+          "sourceRef": "quantum-entanglement.txt",
+          "position": [
+            0.5,
+            1,
+            0
+          ],
+          "color": 5999871
+        },
+        {
+          "id": "memory7",
+          "label": "Solar System Model",
+          "note": "A small, copper model of the solar system",
+          "rationale": "Placed on a nearby plinth, where it would be easily visible and accessible",
+          "objectPrompt": "a small, copper model of the solar system",
+          "sourceRef": "observatory.txt",
+          "position": [
+            -0.5,
+            1.1,
+            -0.5
+          ],
+          "color": 9150420
+        },
+        {
+          "id": "memory8",
+          "label": "Superposition Notes",
+          "note": "Study notes on quantum superposition",
+          "rationale": "Placed on the blackboard, where the equations and notes would be most prominent",
+          "objectPrompt": "a piece of chalk",
+          "sourceRef": "quantum-superposition.md",
+          "position": [
+            0,
+            1.2,
+            0.8
+          ],
+          "color": 11570121
+        }
+      ],
+      "origin": [
+        28,
+        0,
+        0
+      ],
+      "spawn": [
+        0,
+        1.5,
+        0
+      ]
+    }
+  ]
+}

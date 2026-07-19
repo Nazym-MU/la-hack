@@ -1,0 +1,14 @@
+{
+  "name": "mind-palace-pipeline",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Offline pipeline: upload folder -> LLM clusters + writes Marble prompts -> Marble worlds -> palace-schema.json",
+  "scripts": {
+    "build": "node --env-file-if-exists=../.env --env-file-if-exists=.env build.js",
+    "build:generate": "node --env-file-if-exists=../.env --env-file-if-exists=.env build.js --generate"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.70.0"
+  }
+}

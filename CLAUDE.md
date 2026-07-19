@@ -35,6 +35,15 @@ npm run build && npm run preview
 cd server && npm install
 # paste your key into server/.env (TRIPO_API_KEY=...), then:
 npm run dev      # http://localhost:8090; vite proxies /api -> here
+
+# Palace pipeline (upload folder -> LLM -> Marble worlds -> palace-schema.json):
+cd pipeline && npm install
+# keys go in a root .env (see .env.example): WORLDLABS_API_KEY + one agent key
+# (GROQ_API_KEY recommended — free, hosted open model; or ANTHROPIC_API_KEY).
+node build.js ../sample-input --provider openai            # agent only (Groq), stand-in worlds
+node build.js ../sample-input --provider openai --generate # + real Marble worlds (stream from CDN)
+node build.js ../sample-input --provider mock              # no keys at all (offline dev)
+# flags: --max-rooms N (limit generation), --download (cache splats locally instead of streaming)
 ```
 
 Open in a desktop browser — flat-desktop is the primary flow (OrbitControls +
@@ -56,9 +65,20 @@ needed. NOTE: vite auto-bumps the port if 8081 is taken — check the console.
 
 ## Key files
 
-- `src/index.ts` — `World.create(...)`; registers systems, builds the scene.
-- `src/memories.ts` — **the data contract.** `Memory`/`Palace` types + seed
-  data. The generation pipeline only has to emit this shape.
+- `src/index.ts` — `World.create(...)`; registers systems, loads the palace
+  (schema or seed fallback), builds the rooms.
+- `src/palace.ts` — **the multi-room data contract.** `Palace`/`Room`/
+  `MemoryPlacement` types. The pipeline emits this; the viewer loads it. Seams
+  are fields: `Room.splatUrl`/`colliderUrl` (Marble), `MemoryPlacement.modelUrl`
+  (TRIPO). Judged reasoning: `Room.marblePrompt`, `rationale`s.
+- `src/rooms.ts` — loads `palace-schema.json` (falls back to seed), builds one
+  splat host per room at its world-space origin + every memory at origin+local.
+- `src/memories.ts` — the seed single-room palace + `Memory` runtime type.
+- `pipeline/` — the offline generator (own package). `build.js` orchestrates:
+  `ingest.js` (folder→items) → `llm.js` (provider-agnostic agent: claude /
+  openai[Groq] / ollama / mock) → `layout.js` (room origins) → `marble.js`
+  (World Labs generate→poll→stream/download). `prompts/*.md` = the judged agent
+  prompts. Writes `public/palace-schema.json`.
 - `src/memoryObjects.ts` — spawns an interactable object per memory.
 - `src/gaussianSplatLoader.ts` — `GaussianSplatLoader` component/system (kit).
   Set `splatUrl` on the entity to load a Marble world.

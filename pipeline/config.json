@@ -1,0 +1,27 @@
+{
+  "_comment": "Non-content-specific hints for the pipeline. A new upload folder needs NO code changes; at most tweak these knobs. Nothing here names any specific memory, place, or person.",
+
+  "provider": "claude",
+  "model": "claude-opus-4-8",
+
+  "_openaiNote": "provider 'ollama' = local open-source model (free, no key, needs ~2-5GB disk). provider 'openai' = any OpenAI-compatible endpoint (Groq/OpenRouter/etc.) via OPENAI_API_KEY + optional OPENAI_BASE_URL override. Both go through the same code path.",
+  "ollama": { "baseUrl": "http://localhost:11434/v1", "model": "llama3.2:3b" },
+  "openai": { "baseUrl": "https://api.groq.com/openai/v1", "model": "llama-3.3-70b-versatile" },
+
+  "preferredRoomCount": 3,
+  "roomCountTolerance": 1,
+  "maxMemoriesPerRoom": 6,
+
+  "marble": {
+    "model": "marble-1.1",
+    "apiBase": "https://api.worldlabs.ai",
+    "splatResolution": "full_res",
+    "pollIntervalSeconds": 15,
+    "timeoutMinutes": 12
+  },
+
+  "layout": {
+    "pattern": "line",
+    "roomSpacingMeters": 14
+  }
+}

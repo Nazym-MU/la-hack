@@ -9,11 +9,11 @@ import {
   VisibilityState,
   World,
 } from "@iwsdk/core";
-import { GaussianSplatLoader, GaussianSplatLoaderSystem } from "./gaussianSplatLoader.js";
-import { spawnMemoryObjects, MemorySystem } from "./memoryObjects.js";
+import { GaussianSplatLoaderSystem } from "./gaussianSplatLoader.js";
+import { MemorySystem } from "./memoryObjects.js";
 import { enableDesktopControls } from "./desktopControls.js";
-import { initOverlay } from "./overlay.js";
-import { SEED_PALACE } from "./memories.js";
+import { initOverlay, initRoomNav } from "./overlay.js";
+import { createRoomManager, loadPalace, seedAsPalace } from "./rooms.js";
 
 
 // ------------------------------------------------------------
@@ -36,7 +36,7 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
     sceneUnderstanding: false,
   },
 })
-  .then((world) => {
+  .then(async (world) => {
     world.camera.position.set(0, 1.5, 0);
     world.scene.background = new THREE.Color(0x000000);
     world.scene.add(new THREE.AmbientLight(0xffffff, 1.0));
@@ -47,30 +47,9 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
 
 
     // ------------------------------------------------------------
-    // Gaussian Splat — the walkable world. Swap splatUrl for a Marble export.
-    // ------------------------------------------------------------
-    const splatEntity = world.createTransformEntity();
-    splatEntity.addComponent(
-      GaussianSplatLoader,
-      SEED_PALACE.splatUrl ? { splatUrl: SEED_PALACE.splatUrl } : {},
-    );
-
-    const splatSystem = world.getSystem(GaussianSplatLoaderSystem)!;
-
-    // Play splat animation when entering XR
-    world.visibilityState.subscribe((state) => {
-      if (state !== VisibilityState.NonImmersive) {
-        splatSystem.replayAnimation(splatEntity).catch((err) => {
-          console.error("[World] Failed to replay splat animation:", err);
-        });
-      }
-    });
-
-
-    // ------------------------------------------------------------
     // Invisible floor for locomotion (must be a Mesh for IWSDK raycasting)
     // ------------------------------------------------------------
-    const floorGeometry = new PlaneGeometry(100, 100);
+    const floorGeometry = new PlaneGeometry(200, 200);
     floorGeometry.rotateX(-Math.PI / 2);
     const floor = new Mesh(floorGeometry, new MeshBasicMaterial());
     floor.visible = false;
@@ -78,22 +57,57 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
       .createTransformEntity(floor)
       .addComponent(LocomotionEnvironment, { type: EnvironmentType.STATIC });
 
-    // Barely-there orientation grid; the Marble world provides the real floor.
-    const grid = new THREE.GridHelper(100, 100, 0x3a3650, 0x232030);
+    // Barely-there orientation grid; the Marble worlds provide the real floors.
+    const grid = new THREE.GridHelper(200, 200, 0x3a3650, 0x232030);
     grid.material.transparent = true;
     grid.material.opacity = 0.15;
     world.scene.add(grid);
 
 
     // ------------------------------------------------------------
-    // Memory objects — one interactable object per Memory in the palace.
+    // Palace — load the generated schema (rooms + Marble splats + memories);
+    // fall back to the seed single-room palace when none has been built yet.
+    // One room is shown at a time (teleport between them) so each Marble world
+    // fills the view solidly instead of bleeding into its neighbours.
     // ------------------------------------------------------------
-    spawnMemoryObjects(world);
+    const palace = (await loadPalace()) ?? seedAsPalace();
+    console.log(
+      `[World] palace "${palace.title}" — ${palace.rooms.length} room(s), ` +
+        `${palace.rooms.reduce((n, r) => n + r.memories.length, 0)} memories.`,
+    );
+
+    const manager = createRoomManager(world, palace);
+    const setActiveNav = initRoomNav(manager.titles, (i) => void manager.show(i));
+    manager.onChange((i) => setActiveNav(i));
+    await manager.show(0);
+
+    // Room switching: [ / ] to cycle, number keys to jump.
+    window.addEventListener("keydown", (e) => {
+      if ((e.target as HTMLElement)?.tagName === "INPUT" || (e.target as HTMLElement)?.tagName === "TEXTAREA") return;
+      if (e.code === "BracketRight") manager.next();
+      else if (e.code === "BracketLeft") manager.prev();
+      else if (/^Digit[1-9]$/.test(e.code)) {
+        const i = Number(e.code.slice(5)) - 1;
+        if (i < manager.count) void manager.show(i);
+      }
+    });
+
+    // Replay the current room's splat fly-in when entering XR.
+    const splatSystem = world.getSystem(GaussianSplatLoaderSystem)!;
+    world.visibilityState.subscribe((state) => {
+      if (state === VisibilityState.NonImmersive) return;
+      const entity = manager.splatEntity();
+      if (entity) {
+        splatSystem.replayAnimation(entity).catch((err) => {
+          console.error("[World] Failed to replay splat animation:", err);
+        });
+      }
+    });
 
     // Flat-browser navigation + click picking (stands down inside XR).
     enableDesktopControls(world);
 
-    // Glass DOM overlay: memory card, add-memory modal, TRIPO generate flow.
+    // Glass DOM overlay: memory card (now with rationale), add-memory modal.
     initOverlay(world);
   })
   .catch((err) => {
