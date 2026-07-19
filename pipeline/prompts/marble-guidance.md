@@ -189,5 +189,4 @@ Return the whole palace as a single structured JSON object, exactly matching the
 given in the request: `rooms`, each with `title`, `theme`, `marblePrompt`, `rationale`,
 `sourcePhoto`, and `memories`; each memory with `label`, `note`, `rationale`,
 `objectPrompt`, `sourceRef`, and a room-local `position`. Each room's `marblePrompt` is
-the 3-to-6-sentence scene description written per the guidance above. Output only the JSON
-object — no prose, headers, or commentary around it.
+the 3-to-6-sentence scene description written per the guidance above. Output only the JSON object — no prose, headers, or commentary around it.
