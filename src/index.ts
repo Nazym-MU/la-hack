@@ -12,8 +12,9 @@ import {
 import { GaussianSplatLoaderSystem } from "./gaussianSplatLoader.js";
 import { MemorySystem } from "./memoryObjects.js";
 import { enableDesktopControls } from "./desktopControls.js";
-import { initOverlay, initRoomNav } from "./overlay.js";
+import { initOverlay, initControlsHint, initPalaceTitle } from "./overlay.js";
 import { initUploadPanel } from "./uploadPanel.js";
+import { initRoomDropdown } from "./roomDropdown.js";
 import { createRoomManager, loadPalace, seedAsPalace } from "./rooms.js";
 
 
@@ -77,9 +78,11 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
         `${palace.rooms.reduce((n, r) => n + r.memories.length, 0)} memories.`,
     );
 
+    initPalaceTitle(palace.title);
+    initControlsHint();
     const manager = createRoomManager(world, palace);
-    const setActiveNav = initRoomNav(manager.titles, (i) => void manager.show(i));
-    manager.onChange((i) => setActiveNav(i));
+    const setActiveDropdown = initRoomDropdown(manager.titles, (i) => void manager.show(i));
+    manager.onChange((i) => setActiveDropdown(i));
     await manager.show(0);
 
     // Room switching: [ / ] to cycle, number keys to jump. F cycles the world

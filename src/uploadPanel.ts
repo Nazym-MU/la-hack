@@ -1,17 +1,18 @@
 // The simplest "build a palace on the website" UI: a button that opens a modal
 // to upload photos (+ optional notes), POSTs them to the server's
 // /api/build-palace, streams the pipeline's progress over SSE, and reloads the
-// viewer with the freshly generated palace when it finishes.
+// viewer with the palace when it finishes. There is one palace — every build
+// either extends an existing room or adds a new one, decided by the agent.
 
 export function initUploadPanel(): void {
   const root = document.createElement("div");
   root.id = "mp-build";
   root.innerHTML = /* html */ `
-    <button id="mp-build-btn" title="Build a palace from your photos">✦&nbsp;Build from photos</button>
+    <button id="mp-build-btn" title="Add to the palace from your photos">✦&nbsp;Build from photos</button>
     <div id="mp-build-backdrop" class="mp-hidden">
       <div id="mp-build-modal" class="mp-glass">
         <h2>Build a palace</h2>
-        <p class="mp-sub">Upload a few photos (notes optional). They're clustered into rooms and each world is generated. Takes a few minutes.</p>
+        <p class="mp-sub">Upload a few photos (notes optional). They're clustered and added to the palace — either into a room that already fits, or a new one. Takes a few minutes.</p>
         <label>Photos
           <input id="mp-build-files" type="file" accept="image/*" multiple />
         </label>

@@ -90,6 +90,9 @@ export interface Palace {
   rooms: Room[];
 }
 
-// Where the viewer looks for a generated palace. If the fetch 404s, the viewer
+// Where the viewer looks for a generated palace. There is exactly one —
+// "Build from photos" always adds to it (see pipeline/build.js, which
+// decides per upload whether new content extends an existing room or
+// creates a new one). If the fetch 404s (nothing built yet), the viewer
 // falls back to a single-room palace built from SEED_PALACE in memories.ts.
 export const PALACE_SCHEMA_URL = "./palace-schema.json";

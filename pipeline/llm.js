@@ -15,10 +15,21 @@ async function loadPrompt() {
   return fs.readFile(path.join(here, "prompts", "marble-guidance.md"), "utf8");
 }
 
-function taskInstruction(config) {
+function taskInstruction(config, existingRooms = []) {
   const maxRooms = config.preferredRoomCount ?? 3;
   const tol = config.roomCountTolerance ?? 1;
   const maxMem = config.maxMemoriesPerRoom ?? 6;
+
+  const existingBlock = existingRooms.length
+    ? `This palace already has ${existingRooms.length} room(s):\n` +
+      existingRooms.map((r) => `- id: "${r.id}" | title: "${r.title}"${r.theme ? ` | theme: "${r.theme}"` : ""}`).join("\n") +
+      `\n\nFor EACH new room you output, decide: does this content clearly continue one of the rooms ` +
+      `above (same trip/event/person/subject, just more of it)? If yes, set that room's exact "existingRoomId" ` +
+      `and only its new memories matter — its title/theme/marblePrompt/rationale are ignored, so keep them ` +
+      `brief but still fill them in. If the content is a genuinely different entity, leave "existingRoomId" as ` +
+      `an empty string — it becomes a new room. Never invent an existingRoomId that isn't in the list above.\n\n`
+    : `"existingRoomId" must be an empty string for every room — there is no existing palace yet, everything is new.\n\n`;
+
   return (
     `Build a memory palace from the uploaded items below. ` +
     `Cluster strictly by entity per the granularity rules — a single coherent trip, event, ` +
@@ -27,16 +38,17 @@ function taskInstruction(config) {
     `unrelated entities into one room just to produce fewer. The room count must fall out of ` +
     `how many distinct entities are actually present — if everything in this upload belongs ` +
     `to a single entity, return exactly one room. Roughly ${Math.max(1, maxRooms - tol)}–` +
-    `${maxRooms + tol} rooms is a reasonable range for a typical multi-entity upload, but treat ` +
-    `that as a loose upper bound, not a target to hit. ` +
+    `${maxRooms + tol} NEW rooms is a reasonable range for a typical multi-entity upload, but treat ` +
+    `that as a loose upper bound, not a target to hit.\n\n` +
+    existingBlock +
     `Each room holds up to ${maxMem} memories. Return only the structured object.\n\n`
   );
 }
 
-export async function runAgent({ items, config, provider }) {
+export async function runAgent({ items, config, provider, existingRooms = [] }) {
   const chosen = provider || config.provider || "claude";
   const system = await loadPrompt();
-  const task = taskInstruction(config);
+  const task = taskInstruction(config, existingRooms);
 
   let raw;
   let modelLabel = chosen;
@@ -151,11 +163,13 @@ function openaiSettings(chosen, config) {
 const SHAPE_HINT =
   'Return ONE JSON object with this exact shape:\n' +
   '{"title": string, "rooms": [{"id": string, "title": string, "theme": string, ' +
-  '"marblePrompt": string, "rationale": string, "sourcePhoto": string, "memories": [{"id": string, ' +
+  '"marblePrompt": string, "rationale": string, "sourcePhoto": string, "existingRoomId": string, ' +
+  '"memories": [{"id": string, ' +
   '"label": string, "note": string, "rationale": string, "objectPrompt": string, "sourceRef": string, ' +
   '"position": [x, y, z]}]}]}\n' +
   'position is room-local metres: x/z within ~1.5 of centre, y between 0.8 and 1.4. ' +
-  'sourcePhoto is the filename of the best photo for the room, or "". Output JSON only.';
+  'sourcePhoto is the filename of the best photo for the room, or "". ' +
+  'existingRoomId is an existing room\'s exact id if this content continues it, or "". Output JSON only.';
 
 async function runOpenAICompatible({ items, system, task, baseUrl, model, visionModel, apiKey }) {
   const images = items.filter((it) => it.kind === "image");

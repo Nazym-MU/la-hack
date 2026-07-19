@@ -254,34 +254,24 @@ export function initOverlay(world: World): void {
   }
 }
 
-// Top-of-screen room switcher: one chip per room (teleports there on click),
-// plus a small controls hint. Returns setActive(i) to highlight the current
-// room. Renders nothing for a single-room palace.
-export function initRoomNav(
-  titles: string[],
-  onSelect: (index: number) => void,
-): (active: number) => void {
-  if (titles.length <= 1) return () => {};
+// Always-on label naming the palace you're currently inside, so it's never
+// ambiguous which account's rooms you're walking (single-room and multi-room
+// palaces alike — unlike the room-nav chips below, which only render past 1
+// room).
+export function initPalaceTitle(title: string): void {
+  const el = document.createElement("div");
+  el.id = "mp-palace-title";
+  el.textContent = title;
+  document.body.appendChild(el);
+}
 
-  const nav = document.createElement("div");
-  nav.id = "mp-roomnav";
-  const chips = titles.map((title, i) => {
-    const chip = document.createElement("button");
-    chip.className = "mp-room-chip";
-    chip.textContent = `${i + 1} · ${title}`;
-    chip.addEventListener("click", () => onSelect(i));
-    nav.appendChild(chip);
-    return chip;
-  });
+// Persistent controls hint, top-center. Room switching lives entirely in the
+// dropdown now (roomDropdown.ts, top-right) — no chip row needed here.
+export function initControlsHint(): void {
   const hint = document.createElement("div");
   hint.id = "mp-controls-hint";
   hint.textContent = "walk WASD · up/down E Q · look drag · rooms [ ] · flip F";
-  nav.appendChild(hint);
-  document.body.appendChild(nav);
-
-  return (active: number) => {
-    chips.forEach((c, i) => c.classList.toggle("active", i === active));
-  };
+  document.body.appendChild(hint);
 }
 
 function statusLine(status: GenerationStatus): string {

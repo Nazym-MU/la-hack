@@ -63,8 +63,8 @@ export function enableDesktopControls(world: World): void {
     const dx = e.movementX || 0;
     const dy = e.movementY || 0;
     travel += Math.abs(dx) + Math.abs(dy);
-    euler.y -= dx * LOOK_SENSITIVITY;
-    euler.x = THREE.MathUtils.clamp(euler.x - dy * LOOK_SENSITIVITY, -PITCH_LIMIT, PITCH_LIMIT);
+    euler.y += dx * LOOK_SENSITIVITY;
+    euler.x = THREE.MathUtils.clamp(euler.x + dy * LOOK_SENSITIVITY, -PITCH_LIMIT, PITCH_LIMIT);
     camera.quaternion.setFromEuler(euler);
   });
 

@@ -165,8 +165,11 @@ function extractModelUrl(output) {
 
 // -------------------------------------------------------------------
 // Build-a-palace from browser uploads: save files -> spawn the offline
-// pipeline (build.js) -> stream its progress over SSE. The generated
-// palace-schema.json lands in public/, and the viewer reloads to walk it.
+// pipeline (build.js) -> stream its progress over SSE. There is one palace
+// ("demo") — every upload adds to it; the agent decides per cluster whether
+// it extends an existing room or creates a new one (see build.js). The
+// generated palace-schema.json lands in public/, and the viewer reloads to
+// walk it.
 // -------------------------------------------------------------------
 const pipelineDir = path.resolve(__dirname, "../pipeline");
 const rootEnv = path.resolve(__dirname, "../.env");
@@ -201,7 +204,14 @@ app.post("/api/build-palace", async (req, res) => {
 
     const child = spawn(
       process.execPath,
-      [`--env-file-if-exists=${rootEnv}`, "build.js", jobDir, "--provider", provider || "gemini", "--generate"],
+      [
+        `--env-file-if-exists=${rootEnv}`,
+        "build.js",
+        jobDir,
+        "--provider", provider || "gemini",
+        "--name", "demo",
+        "--generate",
+      ],
       { cwd: pipelineDir, env: process.env },
     );
     job.child = child;

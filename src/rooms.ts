@@ -151,6 +151,10 @@ export function createRoomManager(world: World, palace: Palace): RoomManager {
       }
       await queueLoad(token, first, mesh); // applies the flip on completion
 
+      // Progressive upgrade to full res — queued after the low-res load, and
+      // skipped automatically if the room changed before its turn.
+      if (low && high !== low) void queueLoad(token, high, mesh);
+
       // Spawn at the world origin — the Marble capture eye, i.e. natural human
       // standing height. The flip pivots on the origin, so this stays put
       // whatever the orientation. Fly up/down (E/Q) to fine-tune eye level.
@@ -158,10 +162,6 @@ export function createRoomManager(world: World, palace: Palace): RoomManager {
       camera.position.set(sx, 0, sz);
 
       changeCb(i, room);
-
-      // Progressive upgrade to full res — queued after the low-res load, and
-      // skipped automatically if the room changed before its turn.
-      if (low && high !== low) void queueLoad(token, high, mesh);
     } finally {
       switching = false;
     }

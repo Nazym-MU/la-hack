@@ -18,7 +18,16 @@ export const PALACE_DRAFT_SCHEMA = {
       items: {
         type: "object",
         additionalProperties: false,
-        required: ["id", "title", "theme", "marblePrompt", "rationale", "sourcePhoto", "memories"],
+        required: [
+          "id",
+          "title",
+          "theme",
+          "marblePrompt",
+          "rationale",
+          "sourcePhoto",
+          "existingRoomId",
+          "memories",
+        ],
         properties: {
           id: { type: "string", description: "kebab-case unique id, e.g. 'sunlit-study'." },
           title: { type: "string", description: "Human-facing room name." },
@@ -35,6 +44,11 @@ export const PALACE_DRAFT_SCHEMA = {
             type: "string",
             description:
               "Optional: the exact filename of ONE uploaded photo that best captures this place. When set, the world is built from that photo (image-to-world) for realism instead of from the text prompt. Empty string if no photo fits.",
+          },
+          existingRoomId: {
+            type: "string",
+            description:
+              "Set to an existing room's exact id if this content continues an already-built room (its memories get appended there instead of building a new room). Empty string for a genuinely new room.",
           },
           memories: {
             type: "array",
@@ -134,6 +148,9 @@ export function normalizeDraft(raw, config = {}) {
       marblePrompt: String(room.marblePrompt ?? "").trim(),
       rationale: room.rationale ? String(room.rationale).trim() : undefined,
       sourcePhoto: room.sourcePhoto ? String(room.sourcePhoto).trim() : undefined,
+      // Not slugged — must exactly match a real existing room id to merge into
+      // it. build.js validates this and treats a non-match as a new room.
+      existingRoomId: room.existingRoomId ? String(room.existingRoomId).trim() : "",
       memories,
     };
   });

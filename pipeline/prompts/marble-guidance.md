@@ -119,11 +119,20 @@ fits, leave `sourcePhoto` as an empty string.
 Also leave the anchor surfaces (shelves, tables, sills) mostly clear, since each memory's
 object is later dropped onto them as a real 3D token the user can select.
 
+**Extending an already-built palace.** The palace is not always empty — you may be handed
+a list of rooms that already exist from a previous upload. Cluster the new input exactly
+the same way, then for each cluster ask whether it's more of an entity that already has a
+room (the same trip, event, person, or subject, just another photo or note of it) or a
+genuinely new one. More of an existing entity becomes new memories added into that
+existing room, not a duplicate room for the same thing. A genuinely new entity still gets
+its own new room, laid out fresh per the rules above.
+
 ## Workflow
 
 1. **Cluster.** Group the raw input into entities using the fixed granularity rules
 above: a whole trip is one cluster, a person is one cluster, a subject is one cluster
-with its subtopics marked as stations inside it.
+with its subtopics marked as stations inside it. If the entity already has a room from an
+earlier upload, this cluster extends that room instead of forming a new one.
 2. **Decide each room's type.** Mark every cluster as a study room or a memory/other
 room. This decides whether text is allowed later.
 3. **Assign a room per cluster.** Within a subject's room, lay out a station for each
