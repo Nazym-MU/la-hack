@@ -228,6 +228,19 @@ app.post("/api/build-palace", async (req, res) => {
     const job = { log: [], finished: false, ok: false, cancelled: false, child: null };
     jobs.set(jobId, job);
 
+    // Root .env is the single source of truth for pipeline API keys. Strip any
+    // inherited copies from our own environment before spawning: Node's
+    // --env-file will NOT override a variable that's already set, so a stale key
+    // exported in the shell that launched this server would silently win over
+    // root .env and every build would fail with the old key. Deleting them here
+    // lets --env-file-if-exists repopulate them fresh from root .env.
+    const MANAGED_KEYS = [
+      "WORLDLABS_API_KEY", "GROQ_API_KEY", "TRIPO_API_KEY",
+      "GEMINI_API_KEY", "ANTHROPIC_API_KEY",
+    ];
+    const childEnv = { ...process.env };
+    for (const k of MANAGED_KEYS) delete childEnv[k];
+
     const child = spawn(
       process.execPath,
       [
@@ -238,7 +251,7 @@ app.post("/api/build-palace", async (req, res) => {
         "--name", "demo",
         "--generate",
       ],
-      { cwd: pipelineDir, env: process.env },
+      { cwd: pipelineDir, env: childEnv },
     );
     job.child = child;
     const onData = (buf) => {
