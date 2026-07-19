@@ -15,6 +15,7 @@ import {
   eq,
 } from "@iwsdk/core";
 import { SEED_PALACE, type Memory } from "./memories.js";
+import { showPanel } from "./uiPanel.js";
 
 // Tag component linking an interactable entity back to its Memory by id.
 export const MemoryObject = createComponent("MemoryObject", {
@@ -162,15 +163,18 @@ export class MemorySystem extends createSystem({
     const date = memory.dateGenerated
       ? new Date(memory.dateGenerated).toLocaleDateString()
       : "";
-    const body = [memory.note, date].filter(Boolean).join("\n");
 
     this.queries.panels.entities.forEach((panel) => {
       const doc = PanelDocument.data.document[panel.index] as UIKitDocument;
       if (!doc) return;
       const title = doc.getElementById("memory-title") as UIKit.Text | null;
       const text = doc.getElementById("memory-text") as UIKit.Text | null;
+      const dateEl = doc.getElementById("memory-date") as UIKit.Text | null;
       title?.setProperties({ text: memory.label });
-      text?.setProperties({ text: body });
+      text?.setProperties({ text: memory.note ?? "" });
+      dateEl?.setProperties({ text: date });
     });
+
+    showPanel();
   }
 }

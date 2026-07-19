@@ -4,26 +4,37 @@
     "sourceTag": "div",
     "children": [
       {
-        "sourceTag": "span",
-        "type": "custom",
+        "type": "container",
+        "sourceTag": "div",
         "children": [
-          "Mind Palace"
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "A memory"
+            ],
+            "properties": {
+              "id": "memory-title",
+              "class": "memory-title"
+            },
+            "dataUid": "uid-3"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "×"
+            ],
+            "properties": {
+              "id": "close-button"
+            },
+            "dataUid": "uid-4"
+          }
         ],
         "properties": {
-          "class": "heading"
+          "class": "header-row"
         },
         "dataUid": "uid-2"
-      },
-      {
-        "sourceTag": "span",
-        "type": "custom",
-        "children": [
-          "Select a memory to remember"
-        ],
-        "properties": {
-          "class": "sub-heading"
-        },
-        "dataUid": "uid-3"
       },
       {
         "type": "container",
@@ -32,26 +43,12 @@
         "properties": {
           "class": "divider"
         },
-        "dataUid": "uid-4"
-      },
-      {
-        "sourceTag": "span",
-        "type": "custom",
-        "children": [
-          "A place to begin"
-        ],
-        "properties": {
-          "id": "memory-title",
-          "class": "memory-title"
-        },
         "dataUid": "uid-5"
       },
       {
         "sourceTag": "span",
         "type": "custom",
-        "children": [
-          "Walk up to a glowing orb and press it to resurface the moment it holds."
-        ],
+        "children": [],
         "properties": {
           "id": "memory-text",
           "class": "memory-text"
@@ -59,13 +56,12 @@
         "dataUid": "uid-6"
       },
       {
-        "sourceTag": "button",
+        "sourceTag": "span",
         "type": "custom",
-        "children": [
-          "Enter XR"
-        ],
+        "children": [],
         "properties": {
-          "id": "xr-button"
+          "id": "memory-date",
+          "class": "memory-date"
         },
         "dataUid": "uid-7"
       }
@@ -78,70 +74,61 @@
   "classes": {
     "panel-container": {
       "content": {
-        "alignItems": "center",
-        "padding": "3",
-        "width": "55",
+        "padding": "2.5",
+        "width": "46",
         "display": "flex",
         "flexDirection": "column",
-        "backgroundColor": "#0d0221",
-        "borderColor": "#7b2ff2",
-        "borderWidth": "0.2",
-        "borderRadius": 2
+        "backgroundColor": "#1c1b1a",
+        "borderColor": "#3a3733",
+        "borderWidth": "0.15",
+        "borderRadius": 1.5
       }
     },
-    "heading": {
+    "header-row": {
       "content": {
-        "fontSize": "3",
-        "color": "#ffffff",
-        "fontWeight": "bold",
-        "textAlign": "center"
-      }
-    },
-    "sub-heading": {
-      "content": {
-        "fontSize": "1.6",
-        "color": "#c4b5fd",
-        "textAlign": "center",
-        "marginTop": "0.5"
-      }
-    },
-    "divider": {
-      "content": {
-        "width": "80%",
-        "height": "0.1",
-        "marginTop": "1.5",
-        "marginBottom": "1.5",
-        "backgroundColor": "#7b2ff2"
+        "width": "100%",
+        "display": "flex",
+        "flexDirection": "row",
+        "alignItems": "center",
+        "justifyContent": "space-between"
       }
     },
     "memory-title": {
       "content": {
-        "fontSize": "2.2",
-        "color": "#fbbf24",
-        "textAlign": "center",
-        "fontWeight": "bold"
+        "fontSize": "2",
+        "color": "#e8e6e1",
+        "fontWeight": "medium"
+      }
+    },
+    "divider": {
+      "content": {
+        "width": "100%",
+        "height": "0.08",
+        "marginTop": "1",
+        "marginBottom": "1",
+        "backgroundColor": "#3a3733"
       }
     },
     "memory-text": {
       "content": {
-        "fontSize": "1.5",
-        "color": "#e5e7eb",
-        "textAlign": "center",
-        "marginTop": "1"
+        "fontSize": "1.4",
+        "color": "#b8b3ab",
+        "textAlign": "left"
       }
     },
-    "__id__xr-button": {
+    "memory-date": {
       "content": {
-        "width": "100%",
-        "padding": "1.5",
-        "marginTop": "2",
-        "backgroundColor": "#fbbf24",
-        "color": "#0d0221",
-        "borderRadius": 1.5,
-        "borderWidth": "0",
-        "fontSize": "2.2",
-        "fontWeight": "bold",
-        "textAlign": "center",
+        "fontSize": "1.05",
+        "color": "#6f6a5e",
+        "marginTop": "0.8",
+        "textAlign": "left"
+      }
+    },
+    "__id__close-button": {
+      "content": {
+        "fontSize": "2",
+        "color": "#8a8579",
+        "padding": "0.5",
         "cursor": "pointer"
       }
     }
@@ -157,134 +144,134 @@
         "column": 18
       }
     },
-    "heading": {
+    "header-row": {
       "start": {
-        "line": 13,
+        "line": 12,
         "column": 2
       },
       "end": {
-        "line": 13,
-        "column": 10
-      }
-    },
-    "sub-heading": {
-      "start": {
-        "line": 20,
-        "column": 2
-      },
-      "end": {
-        "line": 20,
-        "column": 14
-      }
-    },
-    "divider": {
-      "start": {
-        "line": 27,
-        "column": 2
-      },
-      "end": {
-        "line": 27,
-        "column": 10
+        "line": 12,
+        "column": 13
       }
     },
     "memory-title": {
       "start": {
-        "line": 35,
+        "line": 20,
         "column": 2
       },
       "end": {
-        "line": 35,
+        "line": 20,
         "column": 15
+      }
+    },
+    "divider": {
+      "start": {
+        "line": 33,
+        "column": 2
+      },
+      "end": {
+        "line": 33,
+        "column": 10
       }
     },
     "memory-text": {
       "start": {
-        "line": 42,
+        "line": 41,
         "column": 2
       },
       "end": {
-        "line": 42,
+        "line": 41,
         "column": 14
       }
     },
-    "__id__xr-button": {
+    "memory-date": {
       "start": {
-        "line": 49,
+        "line": 47,
         "column": 2
       },
       "end": {
-        "line": 49,
-        "column": 12
+        "line": 47,
+        "column": 14
+      }
+    },
+    "__id__close-button": {
+      "start": {
+        "line": 26,
+        "column": 2
+      },
+      "end": {
+        "line": 26,
+        "column": 15
       }
     },
     "uid-1": {
       "start": {
-        "line": 63,
+        "line": 54,
         "column": 0
       },
       "end": {
-        "line": 70,
+        "line": 62,
         "column": 6
       }
     },
     "uid-2": {
       "start": {
-        "line": 64,
+        "line": 55,
         "column": 2
       },
       "end": {
-        "line": 64,
-        "column": 42
+        "line": 58,
+        "column": 8
       }
     },
     "uid-3": {
       "start": {
-        "line": 65,
-        "column": 2
+        "line": 56,
+        "column": 4
       },
       "end": {
-        "line": 65,
-        "column": 62
+        "line": 56,
+        "column": 64
       }
     },
     "uid-4": {
       "start": {
-        "line": 66,
-        "column": 2
+        "line": 57,
+        "column": 4
       },
       "end": {
-        "line": 66,
-        "column": 29
+        "line": 57,
+        "column": 36
       }
     },
     "uid-5": {
       "start": {
-        "line": 67,
+        "line": 59,
         "column": 2
       },
       "end": {
-        "line": 67,
-        "column": 70
+        "line": 59,
+        "column": 29
       }
     },
     "uid-6": {
       "start": {
-        "line": 68,
+        "line": 60,
         "column": 2
       },
       "end": {
-        "line": 68,
-        "column": 123
+        "line": 60,
+        "column": 52
       }
     },
     "uid-7": {
       "start": {
-        "line": 69,
+        "line": 61,
         "column": 2
       },
       "end": {
-        "line": 69,
-        "column": 42
+        "line": 61,
+        "column": 52
       }
     }
   }

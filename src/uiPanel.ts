@@ -4,11 +4,23 @@ import {
   PanelUI,
   PanelDocument,
   eq,
-  VisibilityState,
   UIKitDocument,
   UIKit,
 } from "@iwsdk/core";
 import * as THREE from "three";
+
+// The memory panel is hidden until a memory is selected, and closable.
+// MemorySystem calls showPanel() after writing the panel's text; the
+// close button (wired below) calls hidePanel().
+let activePanel: Entity | null = null;
+
+export function showPanel(): void {
+  if (activePanel?.object3D) activePanel.object3D.visible = true;
+}
+
+export function hidePanel(): void {
+  if (activePanel?.object3D) activePanel.object3D.visible = false;
+}
 
 // Render UI on top of splats using AlwaysDepth + high renderOrder.
 // depthWrite stays true so the IWSDK laser pointer depth-tests correctly
@@ -107,29 +119,16 @@ export class PanelSystem extends createSystem({
     // (e.g. when PanelDocument loads before or in the same tick as init).
     this.queries.sensaiPanel.subscribe("qualify", (entity) => {
       makeEntityRenderOnTop(entity);
+      activePanel = entity;
+      if (entity.object3D) entity.object3D.visible = false;
 
       const document = PanelDocument.data.document[
         entity.index
       ] as UIKitDocument;
       if (!document) return;
 
-      const xrButton = document.getElementById("xr-button") as UIKit.Text;
-      xrButton.addEventListener("click", () => {
-        if (this.world.visibilityState.value === VisibilityState.NonImmersive) {
-          this.world.launchXR();
-        } else {
-          this.world.exitXR();
-        }
-      });
-
-      this.world.visibilityState.subscribe((visibilityState) => {
-        xrButton.setProperties({
-          text:
-            visibilityState === VisibilityState.NonImmersive
-              ? "Enter XR"
-              : "Exit to Browser",
-        });
-      });
+      const closeButton = document.getElementById("close-button") as UIKit.Text;
+      closeButton?.addEventListener("click", () => hidePanel());
     }, true);
   }
 }
