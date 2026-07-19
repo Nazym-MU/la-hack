@@ -15,7 +15,7 @@
 
   "preferredRoomCount": 3,
   "roomCountTolerance": 1,
-  "maxMemoriesPerRoom": 6,
+  "maxMemoriesPerRoom": 4,
 
   "marble": {
     "model": "marble-1.1",
@@ -23,6 +23,13 @@
     "splatResolution": "500k",
     "pollIntervalSeconds": 15,
     "timeoutMinutes": 12
+  },
+
+  "tripo": {
+    "apiBase": "https://api.tripo3d.ai/v2/openapi",
+    "pollIntervalSeconds": 10,
+    "timeoutMinutes": 8,
+    "maxObjectsPerRoom": 4
   },
 
   "layout": {
