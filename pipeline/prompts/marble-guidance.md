@@ -41,6 +41,13 @@ it, the same way a real mind palace separates ideas by location.
    trip's different moments into one room as different anchor objects and zones within
    the same walls (a suitcase by the door for departure, a postcard on a shelf for a
    place visited, a ticket stub pinned near a window for the trip home).
+   - A whole event is one entity and one room, no matter how many sessions, days, or
+   photos it contains. A hackathon, a conference, a wedding, a competition, a party — any
+   bounded occurrence with a single time and place — stays inside one room. Do not split
+   a single event into a room per session, per day, or per photo. Pack its different
+   moments into one room as different anchor objects and zones within the same walls (a
+   laptop tangled in cables for the build, a whiteboard sketch for the pitch, a lanyard on
+   a hook for the badge).
    - A person or a relationship is one entity and one room.
    - A subject the user is learning is one entity and one room. Each subtopic within
    that subject becomes a station inside the same room, not a separate room. A station

@@ -16,13 +16,20 @@ async function loadPrompt() {
 }
 
 function taskInstruction(config) {
-  const n = config.preferredRoomCount ?? 3;
+  const maxRooms = config.preferredRoomCount ?? 3;
   const tol = config.roomCountTolerance ?? 1;
   const maxMem = config.maxMemoriesPerRoom ?? 6;
   return (
     `Build a memory palace from the uploaded items below. ` +
-    `Prefer about ${n} room(s) (${Math.max(1, n - tol)}–${n + tol} is fine), ` +
-    `each with up to ${maxMem} memories. Return only the structured object.\n\n`
+    `Cluster strictly by entity per the granularity rules — a single coherent trip, event, ` +
+    `person, or subject is ONE room no matter how many photos or notes describe it. Do not ` +
+    `split one entity into multiple rooms just to produce more rooms, and do not merge ` +
+    `unrelated entities into one room just to produce fewer. The room count must fall out of ` +
+    `how many distinct entities are actually present — if everything in this upload belongs ` +
+    `to a single entity, return exactly one room. Roughly ${Math.max(1, maxRooms - tol)}–` +
+    `${maxRooms + tol} rooms is a reasonable range for a typical multi-entity upload, but treat ` +
+    `that as a loose upper bound, not a target to hit. ` +
+    `Each room holds up to ${maxMem} memories. Return only the structured object.\n\n`
   );
 }
 
