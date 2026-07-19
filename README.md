@@ -1,12 +1,52 @@
 # MindSpace
-one-line pitch, and your best GIF or 15-second demo video right at the top, before any text. This is the single highest-leverage thing in the file; most judges decide interest here.
 
-![Claude](https://img.shields.io/badge/Built%20with-Claude-D97757?style=for-the-badge&logo=anthropic&logoColor=white)
-![Unity](https://img.shields.io/badge/Unity-6000.2-000000?style=for-the-badge&logo=unity&logoColor=white)
+> **MindSpace transforms your notes, photos, memories, and knowledge into a living 3D world you can literally walk through.**
+
+---
+
+## The Problem
+
+Today's productivity tools organize our lives into folders, lists, and databases.
+
+But that's **not how humans naturally remember things.**
+
+We remember:
+
+- 📍 Places
+- 🤝 Relationships
+- 🚶 Walking through spaces
+- 🔗 Connections between ideas
+
+For thousands of years, people have used the **Memory Palace (Method of Loci)** to dramatically improve recall by placing information inside imagined physical spaces.
+
+Yet modern note-taking and productivity apps still expect us to search through flat folders and endless documents.
+
+---
+
+## Our Solution
+
+**MindSpace** turns your personal knowledge into a **living, interactive 3D environment**.
+
+Instead of searching for information, you **walk through it**.
+
+Upload your:
+
+- 📸 Photos
+- 📝 Notes
+- 📅 Calendar
+- 💬 Messages
+- 📄 Documents
+
+MindSpace uses AI to generate a personalized world whose layout reflects how **you** think and remember.
+
+Every room, object, and pathway becomes a meaningful representation of your knowledge and memories.
+
+![Gemini API](https://img.shields.io/badge/Built%20with-Gemini%20API-4285F4?style=for-the-badge&logo=googlegemini&logoColor=white)
 ![WorldLabs](https://img.shields.io/badge/World%20Labs-Gaussian%20Splatting-6C5CE7?style=for-the-badge)
 ![PICO Emulator](https://img.shields.io/badge/PICO-Emulator%200.13.0-1E90FF?style=for-the-badge)
-![WebSpatial](https://img.shields.io/badge/WebSpatial-Voice%20Kit-00B894?style=for-the-badge)
-![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20.19-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![TRIPO](https://img.shields.io/badge/TRIPO-3D%20GenAI-FF6B6B?style=for-the-badge)
+![WebXR](https://img.shields.io/badge/WebXR-Spatial%20Web-000000?style=for-the-badge)
+![Grok](https://img.shields.io/badge/Grok-xAI-1DA1F2?style=for-the-badge)
 
 [![Demo Video](https://img.shields.io/badge/▶-Watch%20Demo-red?style=for-the-badge)](https://your-demo-video-link)
 [![Devpost](https://img.shields.io/badge/Devpost-Submission-003E54?style=for-the-badge&logo=devpost&logoColor=white)](https://devpost.com/software/05-kylian-dictator)
@@ -44,7 +84,7 @@ a few annotated screenshots of the generated room, the manifest JSON, the voice 
 — a simple architecture diagram (curator → WorldLabs → manifest → overlay) as an image, plus a short code block showing the system prompt or manifest format. This is where technical judges actually look.
 
 # Tech stack 
-`#Claude` `#WorldLabs` `#Unity` `#GaussianSplatting` `#PICOEmulator` `#WebSpatial` `#Obsidian` `#NodeJS` `#JSON` `#Vulkan` `#URP` `#TextTo3D` `#SpatialComputing` `#VoiceRecognition` `#ElevenLabs` `#XR` `#VR` `#JavaScript` `#Python` `#PromptEngineering` `#API` `#React` `#Gemini` `#SpatialAudio` `#3DGeneration`
+`#WorldLabs` `#GaussianSplatting` `#PICOEmulator` `#WebXR` `#Obsidian` `#JSON` #TextTo3D` `#SpatialComputing` `#XR` `#VR` `#JavaScript` `#Python` `#PromptEngineering` `#API` `#React` `#Gemini` `#SpatialAudio` `#3DGeneration`
 
 # Setup / run instructions
 — Unity version, Node version, PICO Emulator version, env vars needed. Judges reproducing your build will actually use this.
