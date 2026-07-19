@@ -44,6 +44,7 @@ async function main() {
       const res = await generateRoomWorld({ room, config, outDir, appRelDir, stream });
       room.worldId = res.worldId;
       room.splatUrl = res.splatUrl;
+      room.splatUrlLow = res.splatUrlLow;
       room.colliderUrl = res.colliderUrl;
       // Persist after each room so a mid-run failure still keeps finished worlds.
       await fs.writeFile(schemaPath, JSON.stringify(palace, null, 2));

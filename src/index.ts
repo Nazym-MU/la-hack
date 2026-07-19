@@ -13,6 +13,7 @@ import { GaussianSplatLoaderSystem } from "./gaussianSplatLoader.js";
 import { MemorySystem } from "./memoryObjects.js";
 import { enableDesktopControls } from "./desktopControls.js";
 import { initOverlay, initRoomNav } from "./overlay.js";
+import { initUploadPanel } from "./uploadPanel.js";
 import { createRoomManager, loadPalace, seedAsPalace } from "./rooms.js";
 
 
@@ -81,11 +82,23 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
     manager.onChange((i) => setActiveNav(i));
     await manager.show(0);
 
-    // Room switching: [ / ] to cycle, number keys to jump.
+    // Room switching: [ / ] to cycle, number keys to jump. F cycles the world
+    // orientation live (none -> flip-X -> flip-Z) so we can nail the viewpoint.
+    let hintTimer = 0;
+    const flashHint = (text: string) => {
+      const hint = document.getElementById("mp-controls-hint");
+      if (!hint) return;
+      hint.textContent = text;
+      window.clearTimeout(hintTimer);
+      hintTimer = window.setTimeout(() => {
+        hint.textContent = "walk WASD · up/down E Q · look drag · rooms [ ] · flip F";
+      }, 2500);
+    };
     window.addEventListener("keydown", (e) => {
       if ((e.target as HTMLElement)?.tagName === "INPUT" || (e.target as HTMLElement)?.tagName === "TEXTAREA") return;
       if (e.code === "BracketRight") manager.next();
       else if (e.code === "BracketLeft") manager.prev();
+      else if (e.code === "KeyF") flashHint(`orientation: ${manager.cycleFlip()} — press F to cycle`);
       else if (/^Digit[1-9]$/.test(e.code)) {
         const i = Number(e.code.slice(5)) - 1;
         if (i < manager.count) void manager.show(i);
@@ -109,6 +122,9 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
 
     // Glass DOM overlay: memory card (now with rationale), add-memory modal.
     initOverlay(world);
+
+    // Upload panel: drop photos -> server runs the pipeline -> palace reloads.
+    initUploadPanel();
   })
   .catch((err) => {
     console.error("[World] Failed to create the IWSDK world:", err);

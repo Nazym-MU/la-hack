@@ -52,20 +52,34 @@ async function wlFetch(url, opts = {}) {
 // Labs' public CDN (nothing stored locally — the browser/headset fetches them;
 // CORS is open). With stream:false the assets are downloaded into public/ and
 // the URLs are app-relative (e.g. "./palaces/<name>/room-<id>/world.spz").
-export async function generateRoomWorld({ room, config, outDir, appRelDir, stream = true }) {
+export async function generateRoomWorld({ room, config, outDir, appRelDir, stream = true, imagePath = null }) {
   const base = config.marble?.apiBase ?? "https://api.worldlabs.ai";
   const model = config.marble?.model ?? "marble-1.1";
   const pollMs = (config.marble?.pollIntervalSeconds ?? 15) * 1000;
   const timeoutMs = (config.marble?.timeoutMinutes ?? 12) * 60_000;
 
-  console.log(`[marble] generating world for room "${room.id}" (${model})…`);
+  // Default: text-to-world. If a source photo is given, upload it and switch to
+  // image-to-world (far more realistic). Any failure falls back to text so the
+  // room still generates.
+  let worldPrompt = { type: "text", text_prompt: room.marblePrompt };
+  if (imagePath) {
+    try {
+      const assetId = await uploadImageAsset(base, imagePath);
+      worldPrompt = {
+        type: "image",
+        image_prompt: { source: "media_asset", media_asset_id: assetId },
+        text_prompt: room.marblePrompt,
+      };
+      console.log(`[marble] room "${room.id}" -> image-to-world from ${path.basename(imagePath)}`);
+    } catch (e) {
+      console.warn(`[marble] image-to-world unavailable (${e.message}) — using text-to-world.`);
+    }
+  }
+
+  console.log(`[marble] generating world for room "${room.id}" (${model}, ${worldPrompt.type})…`);
   const gen = await wlFetch(`${base}/marble/v1/worlds:generate`, {
     method: "POST",
-    body: JSON.stringify({
-      display_name: room.title || room.id,
-      model,
-      world_prompt: { type: "text", text_prompt: room.marblePrompt },
-    }),
+    body: JSON.stringify({ display_name: room.title || room.id, model, world_prompt: worldPrompt }),
   });
 
   const opId = gen.operation_id || gen.name || gen.id || gen.operation?.id;
@@ -118,8 +132,14 @@ export async function generateRoomWorld({ room, config, outDir, appRelDir, strea
 
   // Stream mode: hand the viewer the CDN URLs directly, store nothing locally.
   if (stream) {
+    const lowUrl = pickSpz(assets, "150k");
     console.log(`[marble] ✓ room "${room.id}" world ${worldId} (streaming from CDN).`);
-    return { worldId, splatUrl: spzUrl, colliderUrl: colliderRemote ?? undefined };
+    return {
+      worldId,
+      splatUrl: spzUrl,
+      splatUrlLow: lowUrl && lowUrl !== spzUrl ? lowUrl : undefined,
+      colliderUrl: colliderRemote ?? undefined,
+    };
   }
 
   // Download mode: cache the assets under public/ for offline/CDN-hosting.
@@ -150,6 +170,40 @@ function pickSpz(assets, preferred) {
     );
   }
   return typeof s === "string" ? s : null;
+}
+
+// Upload a local image to Marble and return its media_asset id, for
+// image-to-world. Two steps: prepare_upload (get id + signed URL) -> PUT bytes.
+// Defensive about field names (the exact upload shape isn't fully documented);
+// logs the raw prepare_upload response the first time so it can be corrected.
+async function uploadImageAsset(base, filePath) {
+  const buf = await fs.readFile(filePath);
+  let ext = path.extname(filePath).slice(1).toLowerCase() || "jpg";
+  if (ext === "jpeg") ext = "jpg";
+
+  const prep = await wlFetch(`${base}/marble/v1/media-assets:prepare_upload`, {
+    method: "POST",
+    body: JSON.stringify({ file_name: path.basename(filePath), kind: "image", extension: ext }),
+  });
+  console.log("[marble] prepare_upload (raw):", JSON.stringify(prep).slice(0, 500));
+
+  const asset = prep.media_asset ?? prep;
+  const assetId = asset.id ?? asset.media_asset_id ?? prep.id;
+  const up = prep.upload ?? asset.upload ?? {};
+  const uploadUrl = up.url ?? prep.upload_url ?? asset.upload_url ?? prep.signed_url ?? asset.signed_url;
+  const method = (up.method ?? "PUT").toUpperCase();
+  const headers = up.headers ?? {};
+  if (!assetId || !uploadUrl) {
+    throw new Error("prepare_upload response missing id or upload URL (see raw above)");
+  }
+
+  const put = await fetch(uploadUrl, {
+    method,
+    headers: { "Content-Type": `image/${ext === "jpg" ? "jpeg" : ext}`, ...headers },
+    body: buf,
+  });
+  if (!put.ok) throw new Error(`asset upload ${method} ${put.status}`);
+  return assetId;
 }
 
 async function download(url, dest) {

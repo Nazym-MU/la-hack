@@ -99,10 +99,19 @@ async function main() {
         if (await exists(path.join(outDir, "collider.glb"))) room.colliderUrl = `${appRelDir}/collider.glb`;
         continue;
       }
+      // If the agent picked a source photo for this room, resolve it to a real
+      // file so Marble can build the world from the photo (image-to-world).
+      let imagePath = null;
+      if (room.sourcePhoto) {
+        const candidate = path.join(path.resolve(args.folder), room.sourcePhoto);
+        if (await exists(candidate)) imagePath = candidate;
+        else console.warn(`[marble] room "${room.id}" sourcePhoto not found: ${room.sourcePhoto}`);
+      }
       try {
-        const res = await generateRoomWorld({ room, config, outDir, appRelDir, stream });
+        const res = await generateRoomWorld({ room, config, outDir, appRelDir, stream, imagePath });
         room.worldId = res.worldId;
         room.splatUrl = res.splatUrl;
+        room.splatUrlLow = res.splatUrlLow;
         room.colliderUrl = res.colliderUrl;
       } catch (err) {
         console.error(`[marble] room "${room.id}" failed — leaving stand-in world. ${err.message}`);

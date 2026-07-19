@@ -18,7 +18,7 @@ export const PALACE_DRAFT_SCHEMA = {
       items: {
         type: "object",
         additionalProperties: false,
-        required: ["id", "title", "theme", "marblePrompt", "rationale", "memories"],
+        required: ["id", "title", "theme", "marblePrompt", "rationale", "sourcePhoto", "memories"],
         properties: {
           id: { type: "string", description: "kebab-case unique id, e.g. 'sunlit-study'." },
           title: { type: "string", description: "Human-facing room name." },
@@ -30,6 +30,11 @@ export const PALACE_DRAFT_SCHEMA = {
           rationale: {
             type: "string",
             description: "Why this cluster of material became its own room (judged).",
+          },
+          sourcePhoto: {
+            type: "string",
+            description:
+              "Optional: the exact filename of ONE uploaded photo that best captures this place. When set, the world is built from that photo (image-to-world) for realism instead of from the text prompt. Empty string if no photo fits.",
           },
           memories: {
             type: "array",
@@ -128,6 +133,7 @@ export function normalizeDraft(raw, config = {}) {
       theme: room.theme ? String(room.theme).trim() : undefined,
       marblePrompt: String(room.marblePrompt ?? "").trim(),
       rationale: room.rationale ? String(room.rationale).trim() : undefined,
+      sourcePhoto: room.sourcePhoto ? String(room.sourcePhoto).trim() : undefined,
       memories,
     };
   });

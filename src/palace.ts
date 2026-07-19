@@ -55,6 +55,9 @@ export interface Room {
   marblePrompt: string;
   // Why the agent decided this cluster deserves its own room (judged).
   rationale?: string;
+  // Filename of the uploaded photo this room was built from, when the pipeline
+  // used Marble image-to-world instead of text-to-world (provenance).
+  sourcePhoto?: string;
   // World-space offset of this room, in metres. Assigned by pipeline/layout.js
   // so rooms are spatially connected and walkable. The room's splat and all its
   // memories are placed relative to this origin.
@@ -63,6 +66,10 @@ export interface Room {
   // Undefined until Marble generation has run; the viewer falls back to the
   // bundled stand-in world so the loop is testable before any generation.
   splatUrl?: string;
+  // A lower-resolution splat URL for the same world. When present the viewer
+  // loads this first (fast) and swaps to the full splatUrl once it arrives —
+  // progressive detail instead of a slow blank load.
+  splatUrlLow?: string;
   // Cached Marble collider mesh (GLB) — feeds GaussianSplatLoader.meshUrl.
   colliderUrl?: string;
   // Marble world id, kept so assets can be re-exported later.

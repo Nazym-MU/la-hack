@@ -4,6 +4,31 @@ World Labs Marble turns your text into a navigable Gaussian-splat world. The
 prompt is the *entire* specification of the place — write it as a **scene
 description for a 3D environment generator**, not a story.
 
+### ALWAYS a small, enclosed, cozy interior room (non-negotiable)
+
+Every room is an **interior**: four walls, a floor, a ceiling, a clear
+boundary. Small and human-scale — a few metres across, intimate, furnished,
+warm. **Never an outdoor scene, never a vast or open space, never a landscape.**
+
+A memory set outdoors becomes a *snug themed room that evokes it*, not the
+place itself. A beach trip → a small sunlit room with a big window looking out
+to the sea, sandy-warm light, a shell on the sill, a folded map on the desk —
+NOT an open beach or boardwalk. A city → a cozy apartment room with the skyline
+framed in one window. The visitor always stands **inside a real room**.
+
+Start the prompt by naming the enclosed room and its size (e.g. "A small,
+low-ceilinged study, about four metres across, …"). Describe the walls and how
+the room is closed in. Keep it tidy and pleasant, not cluttered.
+
+### Furnish it with clear surfaces for objects
+
+The room must contain **reachable surfaces with open, uncluttered spots** — a
+table, shelves, a windowsill, a mantel, a desk, a chest — arranged around the
+space at roughly waist-to-chest height. These are where memory objects (3D
+tokens) will later be placed, so each memory's anchor object should map to a
+spot on one of these surfaces. Leave the surfaces mostly clear so objects have
+room to sit.
+
 **Infer, then specify.** From the room's clustered material, infer the dominant
 **mood**, the **time of day / era**, and the **material and colour palette**.
 Then describe, in vivid, concrete, spatial language:

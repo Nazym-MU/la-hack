@@ -275,7 +275,7 @@ export function initRoomNav(
   });
   const hint = document.createElement("div");
   hint.id = "mp-controls-hint";
-  hint.textContent = "walk WASD · look drag · rooms [ ] or 1–9";
+  hint.textContent = "walk WASD · up/down E Q · look drag · rooms [ ] · flip F";
   nav.appendChild(hint);
   document.body.appendChild(nav);
 

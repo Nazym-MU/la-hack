@@ -35,14 +35,23 @@ things, and only these:
 - **Imply mood, never assert it.** Do not state the person's biography, feelings,
   or life events as fact anywhere. Let light, material, and object choice carry
   the emotion — in the room, and in how you place its memories.
+- **Use the photos.** When photos are attached, look at them: let what you see
+  shape the clustering and the `marblePrompt` (real colours, materials, light).
+  For each room, if ONE photo best captures the place, set the room's
+  `sourcePhoto` to that exact filename — the world will then be generated *from
+  that photo* for realism, with your `marblePrompt` as guidance. If no single
+  photo fits the room, leave `sourcePhoto` as an empty string and rely on the
+  prompt. Still write a full `marblePrompt` either way.
 - **Rooms are places, memories are objects.** A room is where you stand; a memory
   is a thing you'd see and reach for there.
 - **Positions are room-local metres**, relative to the room's centre at the
-  origin. Keep them roughly within a 3-metre radius on the horizontal (x, z) and
-  between 0.8 and 1.8 metres high (y) — objects sit on furniture or float at eye
-  level, spread around the room so no two crowd the same spot. The viewer places
-  the visitor at the room centre looking along −z, so put the most important
-  memory where they'd first look.
+  origin. The rooms are small, so keep positions within about a **1.5-metre
+  radius** on the horizontal (x, z) and between **0.8 and 1.4 metres high** (y) —
+  each object rests on one of the room's surfaces (a shelf, the table, the
+  windowsill you described in the `marblePrompt`), spread around so no two crowd
+  the same spot. The visitor stands at the room centre looking along −z, so put
+  the most important memory where they'd first look. Every memory becomes a 3D
+  object that sits at this spot, so choose real resting places, not mid-air.
 - **Write for whoever uploaded this**, in the second person or a warm neutral
   voice. Labels are short (2–4 words). Notes are one sentence of what the object
   represents. `objectPrompt` is a short concrete description of a single physical

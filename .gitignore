@@ -80,6 +80,9 @@ web_modules/
 # from the World Labs CDN, so nothing large is committed.
 public/palaces/
 
+# Browser-uploaded folders for the build-a-palace flow
+server/.uploads/
+
 # macOS
 .DS_Store
 

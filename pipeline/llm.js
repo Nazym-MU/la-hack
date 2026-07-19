@@ -43,7 +43,7 @@ export async function runAgent({ items, config, provider }) {
   } else if (chosen === "ollama" || chosen === "openai") {
     const oa = openaiSettings(chosen, config);
     raw = await runOpenAICompatible({ items, system, task, ...oa });
-    modelLabel = oa.model;
+    modelLabel = items.some((it) => it.kind === "image") ? oa.visionModel : oa.model;
   } else if (chosen === "gemini") {
     raw = await runGemini({ items, config, system, task });
   } else if (chosen === "mock") {
@@ -121,6 +121,7 @@ function openaiSettings(chosen, config) {
     return {
       baseUrl: process.env.OLLAMA_BASE_URL || c.baseUrl || "http://localhost:11434/v1",
       model: process.env.OLLAMA_MODEL || c.model || "llama3.2:3b",
+      visionModel: process.env.OLLAMA_VISION_MODEL || c.visionModel || "llama3.2-vision",
       apiKey: "ollama", // Ollama ignores the key
     };
   }
@@ -135,6 +136,8 @@ function openaiSettings(chosen, config) {
   return {
     baseUrl: process.env.OPENAI_BASE_URL || c.baseUrl || "https://api.groq.com/openai/v1",
     model: process.env.OPENAI_MODEL || c.model || "llama-3.3-70b-versatile",
+    // Multimodal model used when the folder contains photos.
+    visionModel: process.env.OPENAI_VISION_MODEL || c.visionModel || "meta-llama/llama-4-scout-17b-16e-instruct",
     apiKey,
   };
 }
@@ -144,26 +147,44 @@ function openaiSettings(chosen, config) {
 const SHAPE_HINT =
   'Return ONE JSON object with this exact shape:\n' +
   '{"title": string, "rooms": [{"id": string, "title": string, "theme": string, ' +
-  '"marblePrompt": string, "rationale": string, "memories": [{"id": string, "label": string, ' +
-  '"note": string, "rationale": string, "objectPrompt": string, "sourceRef": string, ' +
+  '"marblePrompt": string, "rationale": string, "sourcePhoto": string, "memories": [{"id": string, ' +
+  '"label": string, "note": string, "rationale": string, "objectPrompt": string, "sourceRef": string, ' +
   '"position": [x, y, z]}]}]}\n' +
-  "position is room-local metres: x/z within ~3 of centre, y between 0.8 and 1.8. Output JSON only.";
+  'position is room-local metres: x/z within ~1.5 of centre, y between 0.8 and 1.4. ' +
+  'sourcePhoto is the filename of the best photo for the room, or "". Output JSON only.';
 
-async function runOpenAICompatible({ items, system, task, baseUrl, model, apiKey }) {
+async function runOpenAICompatible({ items, system, task, baseUrl, model, visionModel, apiKey }) {
+  const images = items.filter((it) => it.kind === "image");
+  const useVision = images.length > 0;
   const userText = task + digestItems(items) + "\n\n" + SHAPE_HINT;
+
+  // With photos: use the vision model and attach images as image_url blocks.
+  // (Skip json_object mode there — some vision models reject it; parseLooseJson
+  // handles fenced/plain JSON.) Text-only: keep the stronger text model + json.
+  const userContent = useVision
+    ? [
+        { type: "text", text: userText },
+        ...images.map((it) => ({
+          type: "image_url",
+          image_url: { url: `data:${it.mediaType};base64,${it.base64}` },
+        })),
+      ]
+    : userText;
+
+  const reqBody = {
+    model: useVision ? visionModel : model,
+    temperature: 0.7,
+    messages: [
+      { role: "system", content: system },
+      { role: "user", content: userContent },
+    ],
+  };
+  if (!useVision) reqBody.response_format = { type: "json_object" };
 
   const res = await fetch(`${baseUrl.replace(/\/$/, "")}/chat/completions`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-    body: JSON.stringify({
-      model,
-      temperature: 0.7,
-      response_format: { type: "json_object" },
-      messages: [
-        { role: "system", content: system },
-        { role: "user", content: userText },
-      ],
-    }),
+    body: JSON.stringify(reqBody),
   });
   const text = await res.text();
   if (!res.ok) throw new Error(`OpenAI-compatible endpoint ${res.status}: ${text.slice(0, 400)}`);

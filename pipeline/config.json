@@ -6,7 +6,11 @@
 
   "_openaiNote": "provider 'ollama' = local open-source model (free, no key, needs ~2-5GB disk). provider 'openai' = any OpenAI-compatible endpoint (Groq/OpenRouter/etc.) via OPENAI_API_KEY + optional OPENAI_BASE_URL override. Both go through the same code path.",
   "ollama": { "baseUrl": "http://localhost:11434/v1", "model": "llama3.2:3b" },
-  "openai": { "baseUrl": "https://api.groq.com/openai/v1", "model": "llama-3.3-70b-versatile" },
+  "openai": {
+    "baseUrl": "https://api.groq.com/openai/v1",
+    "model": "llama-3.3-70b-versatile",
+    "visionModel": "meta-llama/llama-4-scout-17b-16e-instruct"
+  },
 
   "preferredRoomCount": 3,
   "roomCountTolerance": 1,
@@ -15,7 +19,7 @@
   "marble": {
     "model": "marble-1.1",
     "apiBase": "https://api.worldlabs.ai",
-    "splatResolution": "full_res",
+    "splatResolution": "500k",
     "pollIntervalSeconds": 15,
     "timeoutMinutes": 12
   },

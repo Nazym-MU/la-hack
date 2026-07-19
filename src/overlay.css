@@ -84,6 +84,88 @@
   font-weight: 300;
   color: rgba(255, 255, 255, 0.68);
 }
+#mp-build-btn {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 30;
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(20, 20, 28, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+#mp-build-btn:hover {
+  background: rgba(40, 40, 52, 0.72);
+  color: #fff;
+}
+#mp-build-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+}
+#mp-build-modal {
+  width: min(460px, 92vw);
+  max-height: 88vh;
+  overflow: auto;
+  padding: 22px;
+}
+#mp-build-modal h2 {
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 500;
+}
+#mp-build-modal label {
+  display: block;
+  margin: 12px 0 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.5);
+}
+#mp-build-modal input[type="file"],
+#mp-build-modal textarea {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  box-sizing: border-box;
+  font: inherit;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  padding: 9px 10px;
+}
+#mp-build-modal textarea {
+  min-height: 64px;
+  resize: vertical;
+  text-transform: none;
+}
+#mp-build-log {
+  margin: 14px 0 0;
+  max-height: 200px;
+  overflow: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.66);
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 8px;
+  padding: 10px;
+  white-space: pre-wrap;
+}
 #mp-roomnav {
   position: fixed;
   top: 16px;

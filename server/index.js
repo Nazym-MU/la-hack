@@ -1,5 +1,12 @@
 import express from "express";
 import cors from "cors";
+import { spawn } from "node:child_process";
+import { promises as fsp } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { randomUUID } from "node:crypto";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Holds the TRIPO API key server-side so it never reaches the browser.
 // Put it in server/.env (see .env.example) — the dev script loads it via
@@ -17,8 +24,9 @@ if (!TRIPO_API_KEY) {
 
 const app = express();
 app.use(cors());
-// Large limit: the client may send a base64 photo for image_to_model.
-app.use(express.json({ limit: "25mb" }));
+// Large limit: the client may send base64 photos (single TRIPO object, or a
+// whole folder for the build-palace flow).
+app.use(express.json({ limit: "60mb" }));
 
 // POST { prompt, imageDataUrl? } -> kicks off a TRIPO task, returns { taskId }.
 //  - prompt only          -> text_to_model
@@ -154,6 +162,91 @@ function extractModelUrl(output) {
   if (!output) return null;
   return output.pbr_model ?? output.model ?? output.base_model ?? null;
 }
+
+// -------------------------------------------------------------------
+// Build-a-palace from browser uploads: save files -> spawn the offline
+// pipeline (build.js) -> stream its progress over SSE. The generated
+// palace-schema.json lands in public/, and the viewer reloads to walk it.
+// -------------------------------------------------------------------
+const pipelineDir = path.resolve(__dirname, "../pipeline");
+const rootEnv = path.resolve(__dirname, "../.env");
+const uploadsBase = path.resolve(__dirname, ".uploads");
+const jobs = new Map();
+
+app.post("/api/build-palace", async (req, res) => {
+  const { files, notes, provider } = req.body ?? {};
+  if ((!Array.isArray(files) || files.length === 0) && !(notes && notes.trim())) {
+    return res.status(400).json({ error: "Provide at least one photo or some notes." });
+  }
+  try {
+    const jobId = randomUUID();
+    const jobDir = path.join(uploadsBase, jobId);
+    await fsp.mkdir(jobDir, { recursive: true });
+
+    let n = 0;
+    for (const f of files ?? []) {
+      const m = /^data:image\/(\w+);base64,(.+)$/.exec(f.dataUrl || "");
+      if (!m) continue;
+      n++;
+      const ext = m[1] === "jpeg" ? "jpg" : m[1];
+      const base = path.basename(f.name || `photo-${n}`).replace(/[^\w.\-]+/g, "_") || `photo-${n}.${ext}`;
+      await fsp.writeFile(path.join(jobDir, base), Buffer.from(m[2], "base64"));
+    }
+    if (notes && typeof notes === "string" && notes.trim()) {
+      await fsp.writeFile(path.join(jobDir, "notes.txt"), notes.trim());
+    }
+
+    const job = { log: [], finished: false, ok: false };
+    jobs.set(jobId, job);
+
+    const child = spawn(
+      process.execPath,
+      [`--env-file-if-exists=${rootEnv}`, "build.js", jobDir, "--provider", provider || "openai", "--generate"],
+      { cwd: pipelineDir, env: process.env },
+    );
+    const onData = (buf) => {
+      for (const line of buf.toString().split(/\r?\n/)) if (line.trim()) job.log.push(line);
+    };
+    child.stdout.on("data", onData);
+    child.stderr.on("data", onData);
+    child.on("close", (code) => {
+      job.finished = true;
+      job.ok = code === 0;
+    });
+    child.on("error", (err) => {
+      job.log.push("spawn error: " + err.message);
+      job.finished = true;
+      job.ok = false;
+    });
+
+    console.log(`[server] build-palace ${jobId}: ${n} photo(s), notes=${!!notes}`);
+    res.json({ jobId });
+  } catch (err) {
+    console.error("[server] build-palace error:", err);
+    res.status(500).json({ error: String(err.message ?? err) });
+  }
+});
+
+// SSE progress for a build job. Replays the log so far, then streams new lines,
+// then a final { done, ok } event.
+app.get("/api/build-palace/:id/stream", (req, res) => {
+  const job = jobs.get(req.params.id);
+  if (!job) return res.status(404).end();
+  res.set({ "Content-Type": "text/event-stream", "Cache-Control": "no-cache", Connection: "keep-alive" });
+  res.flushHeaders?.();
+  let idx = 0;
+  const tick = () => {
+    while (idx < job.log.length) res.write(`data: ${JSON.stringify({ line: job.log[idx++] })}\n\n`);
+    if (job.finished) {
+      res.write(`data: ${JSON.stringify({ done: true, ok: job.ok })}\n\n`);
+      clearInterval(timer);
+      res.end();
+    }
+  };
+  const timer = setInterval(tick, 400);
+  tick();
+  req.on("close", () => clearInterval(timer));
+});
 
 const PORT = process.env.PORT ?? 8090;
 app.listen(PORT, () => {

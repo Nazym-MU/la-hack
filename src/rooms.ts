@@ -60,6 +60,7 @@ export interface RoomManager {
   prev: () => void;
   onChange: (cb: (index: number, room: Room) => void) => void;
   splatEntity: () => ReturnType<World["createTransformEntity"]> | null;
+  cycleFlip: () => "none" | "x" | "z";
 }
 
 // Builds the manager. Nothing is shown until you call show(); index.ts kicks it
@@ -73,6 +74,18 @@ export function createRoomManager(world: World, palace: Palace): RoomManager {
   let index = -1;
   let changeCb: (index: number, room: Room) => void = () => {};
   let switching = false;
+  let showToken = 0; // invalidates a stale high-res upgrade when the room changes
+  // World orientation. Marble worlds load with -Y up; a 180° roll about Z
+  // corrects "up" without spinning you to face a wall (rotating about X would).
+  // The 'f' key cycles none/x/z live in case a world needs a different fix.
+  let flipMode: "none" | "x" | "z" = "z";
+
+  const applyFlip = () => {
+    if (!splat?.object3D) return;
+    const rx = flipMode === "x" ? Math.PI : 0;
+    const rz = flipMode === "z" ? Math.PI : 0;
+    splat.object3D.quaternion.setFromEuler(new THREE.Euler(rx, 0, rz));
+  };
 
   async function show(i: number) {
     if (i === index || switching || i < 0 || i >= rooms.length) return;
@@ -102,29 +115,48 @@ export function createRoomManager(world: World, palace: Palace): RoomManager {
         );
       }
 
-      // Swap the room's world onto the single splat host.
-      const url = room.splatUrl || BUNDLED_STANDIN;
+      // Swap the room's world onto the single splat host. Load the low-res
+      // splat first (fast) when there is one, then upgrade to full res below.
+      const high = room.splatUrl || BUNDLED_STANDIN;
+      const low = room.splatUrlLow;
+      const first = low ?? high;
       const mesh = room.colliderUrl ?? "";
+      const token = ++showToken;
+
       if (!splat) {
         splat = world.createTransformEntity();
-        splat.addComponent(GaussianSplatLoader, mesh ? { splatUrl: url, meshUrl: mesh } : { splatUrl: url });
+        splat.addComponent(GaussianSplatLoader, mesh ? { splatUrl: first, meshUrl: mesh } : { splatUrl: first });
       } else {
-        splat.setValue(GaussianSplatLoader, "splatUrl", url);
+        splat.setValue(GaussianSplatLoader, "splatUrl", first);
         splat.setValue(GaussianSplatLoader, "meshUrl", mesh);
         await splatSystem.load(splat);
       }
 
-      // Marble worlds come in with -Y up (they render upside-down in Spark); the
-      // bundled stand-in is already upright. Set the host quaternion directly so
-      // the fix doesn't depend on the ECS transform-sync patch having run yet.
-      const flip = url !== BUNDLED_STANDIN;
-      splat.object3D?.quaternion.setFromEuler(new THREE.Euler(flip ? Math.PI : 0, 0, 0));
+      // Apply the current world orientation (cycled live with the 'f' key).
+      applyFlip();
 
-      // Teleport the visitor to this room's spawn point.
-      const [sx, sy, sz] = room.spawn ?? [0, 1.5, 0];
-      camera.position.set(sx, sy, sz);
+      // Spawn at the world origin — the Marble capture eye, i.e. natural human
+      // standing height. The flip pivots on the origin, so this stays put
+      // whatever the orientation. Fly up/down (E/Q) to fine-tune eye level.
+      const [sx, , sz] = room.spawn ?? [0, 0, 0];
+      camera.position.set(sx, 0, sz);
 
       changeCb(i, room);
+
+      // Progressive upgrade: once the low-res world is showing, swap to full
+      // res in the background (skip if the room changed meanwhile).
+      if (low && high !== low) {
+        void (async () => {
+          try {
+            if (token !== showToken || !splat) return;
+            splat.setValue(GaussianSplatLoader, "splatUrl", high);
+            await splatSystem.load(splat);
+            if (token === showToken) applyFlip();
+          } catch (err) {
+            console.error(`[rooms] high-res upgrade failed for "${room.id}":`, err);
+          }
+        })();
+      }
     } finally {
       switching = false;
     }
@@ -141,5 +173,10 @@ export function createRoomManager(world: World, palace: Palace): RoomManager {
       changeCb = cb;
     },
     splatEntity: () => splat,
+    cycleFlip: () => {
+      flipMode = flipMode === "none" ? "x" : flipMode === "x" ? "z" : "none";
+      applyFlip();
+      return flipMode;
+    },
   };
 }

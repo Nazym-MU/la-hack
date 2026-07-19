@@ -14,12 +14,14 @@ import { isPlacing } from "./placement.js";
 
 const CLICK_SLOP_PX = 5;
 const LOOK_SENSITIVITY = 0.0026;
-const WALK_SPEED = 2.6; // metres / second
-const RUN_SPEED = 5.5;
+const WALK_SPEED = 2.0; // metres / second (rooms are small — walk gently)
+const RUN_SPEED = 4.0;
+const ROOM_BOUND = 4.5; // keep the visitor inside the room, not out in the void
 const PITCH_LIMIT = 1.45; // ~83°
 const WORLD_UP = new THREE.Vector3(0, 1, 0);
 const MOVE_CODES = new Set([
   "KeyW", "KeyA", "KeyS", "KeyD",
+  "KeyE", "KeyQ", // fly up / down (set eye level)
   "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
   "ShiftLeft", "ShiftRight",
 ]);
@@ -110,23 +112,33 @@ export function enableDesktopControls(world: World): void {
     const dt = Math.min(clock.getDelta(), 0.05);
     if (!enabled || keys.size === 0) return;
 
+    const speed = (keys.has("ShiftLeft") || keys.has("ShiftRight") ? RUN_SPEED : WALK_SPEED) * dt;
+
+    // Horizontal walk, relative to where you're looking.
     camera.getWorldDirection(forward);
     forward.y = 0;
-    if (forward.lengthSq() < 1e-6) return;
-    forward.normalize();
-    right.crossVectors(forward, WORLD_UP).normalize();
+    if (forward.lengthSq() > 1e-6) {
+      forward.normalize();
+      right.crossVectors(forward, WORLD_UP).normalize();
+      move.set(0, 0, 0);
+      if (keys.has("KeyW") || keys.has("ArrowUp")) move.add(forward);
+      if (keys.has("KeyS") || keys.has("ArrowDown")) move.sub(forward);
+      if (keys.has("KeyD") || keys.has("ArrowRight")) move.add(right);
+      if (keys.has("KeyA") || keys.has("ArrowLeft")) move.sub(right);
+      if (move.lengthSq() > 0) {
+        move.normalize().multiplyScalar(speed);
+        camera.position.x += move.x;
+        camera.position.z += move.z;
+      }
+    }
 
-    move.set(0, 0, 0);
-    if (keys.has("KeyW") || keys.has("ArrowUp")) move.add(forward);
-    if (keys.has("KeyS") || keys.has("ArrowDown")) move.sub(forward);
-    if (keys.has("KeyD") || keys.has("ArrowRight")) move.add(right);
-    if (keys.has("KeyA") || keys.has("ArrowLeft")) move.sub(right);
-    if (move.lengthSq() === 0) return;
+    // Vertical fly to set eye level (E up / Q down).
+    if (keys.has("KeyE")) camera.position.y += speed;
+    if (keys.has("KeyQ")) camera.position.y -= speed;
 
-    const speed = keys.has("ShiftLeft") || keys.has("ShiftRight") ? RUN_SPEED : WALK_SPEED;
-    move.normalize().multiplyScalar(speed * dt);
-    camera.position.x += move.x;
-    camera.position.z += move.z; // y stays at eye height -> walking, not flying
+    // Soft boundary on the floor plane: stay inside the room, not out in the void.
+    camera.position.x = THREE.MathUtils.clamp(camera.position.x, -ROOM_BOUND, ROOM_BOUND);
+    camera.position.z = THREE.MathUtils.clamp(camera.position.z, -ROOM_BOUND, ROOM_BOUND);
   }
   tick();
 }
