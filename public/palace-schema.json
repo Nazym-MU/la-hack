@@ -1,7 +1,7 @@
 {
   "title": "Palace of Shared Moments",
-  "generatedAt": "2026-07-19T17:27:10.001Z",
-  "sourceFolder": "/Users/nuray/la-hack/server/.uploads/9afd3401-4725-42ba-a64e-34d65b0c9014",
+  "generatedAt": "2026-07-19T17:55:24.288Z",
+  "sourceFolder": "/Users/nuray/la-hack/server/.uploads/cf4b2320-2b93-4808-aa8e-4d482376b55e",
   "agent": {
     "provider": "gemini",
     "model": "gemini-3.5-flash"
@@ -218,6 +218,72 @@
       "splatUrl": "https://cdn.marble.worldlabs.ai/f11bf1a4-48c0-48c3-8b06-2b7f53949ec8/2901de05-8d32-44b2-89f9-5014696b911b_ceramic_500k.spz",
       "splatUrlLow": "https://cdn.marble.worldlabs.ai/f11bf1a4-48c0-48c3-8b06-2b7f53949ec8/58088387-be87-4ba9-8d01-4ed465c6eb10_ceramic_150k.spz",
       "colliderUrl": "https://cdn.marble.worldlabs.ai/f11bf1a4-48c0-48c3-8b06-2b7f53949ec8/bd70a057.glb"
+    },
+    {
+      "id": "la-rooftop-lounge",
+      "title": "The LA Rooftop Lounge",
+      "theme": "An energetic night of clubbing, skyline views, and close friendship in Los Angeles",
+      "marblePrompt": "A chic, narrow outdoor rooftop patio in Los Angeles at night, enclosed by glass railings overlooking a sprawling grid of distant city lights under a dark sky. The floor is made of large concrete tiles, and a low concrete planter box with deep green foliage runs along one side. Warm, ambient low-level lights glow from hidden strips below the seating, casting a pink and amber hue across the scene. A dark wooden side table stands nearby, and a glass door leads back inside towards a stylishly dimly lit corridor. The atmosphere is intimate, exclusive, and vibrant.",
+      "rationale": "All provided assets document a single social trip and night out in Los Angeles, combining hotel preparation, street dining, and a rooftop gathering. This forms one cohesive memory of a trip.",
+      "existingRoomId": "",
+      "memories": [
+        {
+          "id": "hotel-prep-selfie",
+          "label": "Getting Ready",
+          "note": "A snapshot of getting dressed up in pink outfits in the hotel mirror before going out.",
+          "rationale": "Placed on a sleek vanity tray near the entryway to represent the initial preparation stage before stepping onto the roof.",
+          "objectPrompt": "A small, elegant silver hand mirror lying on a minimalist black lacquer tray.",
+          "sourceRef": "IMG_9522.jpeg",
+          "position": [
+            -1.2,
+            1.1,
+            -0.8
+          ],
+          "color": 9150420
+        },
+        {
+          "id": "street-side-tacos",
+          "label": "Late Night Bites",
+          "note": "A candid memory of sitting by a food truck chatting on the streets of LA.",
+          "rationale": "Located near a corner stool, evoking casual street-side seating and late-night conversation.",
+          "objectPrompt": "A small, crumpled paper food container with a fresh lime wedge inside.",
+          "sourceRef": "IMG_9564.jpeg",
+          "position": [
+            1,
+            0.9,
+            0.5
+          ],
+          "color": 11570121
+        },
+        {
+          "id": "skyline-rooftop-group",
+          "label": "Rooftop Gathering",
+          "note": "The main group photo of five friends smiling against the backdrop of the illuminated LA skyline.",
+          "rationale": "Positioned prominently on the main concrete ledge overlooking the virtual skyline view.",
+          "objectPrompt": "A pair of stylish clear-framed glasses resting on a concrete ledge.",
+          "sourceRef": "IMG_9702.jpeg",
+          "position": [
+            0,
+            1.2,
+            -1.5
+          ],
+          "color": 13214590
+        }
+      ],
+      "origin": [
+        42,
+        0,
+        0
+      ],
+      "spawn": [
+        0,
+        1.5,
+        0
+      ],
+      "worldId": "965e9a4a-7bd2-455b-98dd-fe5711a8c35e",
+      "splatUrl": "https://cdn.marble.worldlabs.ai/965e9a4a-7bd2-455b-98dd-fe5711a8c35e/a0b449d8-00a4-4069-b675-126671a127f7_ceramic_500k.spz",
+      "splatUrlLow": "https://cdn.marble.worldlabs.ai/965e9a4a-7bd2-455b-98dd-fe5711a8c35e/387211a7-da0f-46a1-9aa2-57fd2002d08c_ceramic_150k.spz",
+      "colliderUrl": "https://cdn.marble.worldlabs.ai/965e9a4a-7bd2-455b-98dd-fe5711a8c35e/40011e47.glb"
     }
   ]
 }
