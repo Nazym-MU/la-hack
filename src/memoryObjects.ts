@@ -24,11 +24,27 @@ export function getMemory(id: string): Memory | undefined {
 }
 
 // Placed object roots, for desktop raycast picking. Each carries its memory id
-// in userData.memoryId.
+// in userData.memoryId. Only ever holds the ACTIVE room's objects (room
+// switching clears and refills it), so picking is naturally scoped per room.
 export const memoryMeshes: THREE.Object3D[] = [];
 const objects3D = new Map<string, THREE.Object3D>();
+const memoryEntities = new Map<string, { destroy?: () => void }>();
 export function getMemoryObject3D(id: string): THREE.Object3D | undefined {
   return objects3D.get(id);
+}
+
+// Tears down every currently-placed memory (objects + entities + registries).
+// Used by the room switcher so only one room's memories exist at a time.
+export function clearMemories(): void {
+  for (const [id, entity] of memoryEntities) {
+    objects3D.get(id)?.removeFromParent();
+    entity.destroy?.();
+  }
+  memoryEntities.clear();
+  memoryRegistry.clear();
+  objects3D.clear();
+  memoryMeshes.length = 0;
+  requestedMemoryId = null;
 }
 
 // Desktop (mouse) selection funnels through here; MemorySystem drains it so
@@ -134,10 +150,9 @@ export function addPlacedMemory(
   memoryMeshes.push(object3D);
   objects3D.set(resolved.id, object3D);
 
-  world
-    .createTransformEntity(object3D)
-    .addComponent(Interactable)
-    .addComponent(MemoryObject, { memoryId: resolved.id });
+  const entity = world.createTransformEntity(object3D);
+  entity.addComponent(Interactable).addComponent(MemoryObject, { memoryId: resolved.id });
+  memoryEntities.set(resolved.id, entity as unknown as { destroy?: () => void });
 }
 
 // THE object seam. Places one memory in the world at runtime.

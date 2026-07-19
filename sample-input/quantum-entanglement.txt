@@ -1,0 +1,9 @@
+Entanglement study notes.
+
+Two qubits can share a state that can't be written as a product of individual
+states — e.g. the Bell state (|00> + |11>)/sqrt(2). Measure one, you instantly
+know the other, no matter the distance. Not faster-than-light communication:
+you can't control which outcome you get, so no information is sent.
+
+For the exam: be able to derive the Bell states and explain why the CHSH
+inequality is violated. Draw the circuit: Hadamard then CNOT.

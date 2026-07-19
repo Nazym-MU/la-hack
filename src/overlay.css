@@ -84,6 +84,66 @@
   font-weight: 300;
   color: rgba(255, 255, 255, 0.68);
 }
+#mp-roomnav {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  z-index: 30;
+  pointer-events: none;
+}
+#mp-roomnav > * {
+  pointer-events: auto;
+}
+.mp-room-chip {
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.72);
+  background: rgba(20, 20, 28, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.mp-room-chip:hover {
+  background: rgba(40, 40, 52, 0.7);
+  color: #fff;
+}
+.mp-room-chip.active {
+  background: rgba(255, 255, 255, 0.92);
+  color: #14141c;
+  border-color: transparent;
+}
+#mp-controls-hint {
+  width: 100%;
+  text-align: center;
+  margin-top: 2px;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.38);
+  text-transform: uppercase;
+}
+#mp-card-rationale {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.6);
+  border-left: 2px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 0 6px 6px 0;
+}
 #mp-card-footer {
   display: flex;
   align-items: center;

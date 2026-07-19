@@ -24,6 +24,11 @@ export interface Memory {
   // Placeholder tint + optional scale applied to the GLB.
   color?: number;
   scale?: number;
+  // The agent's method-of-loci reasoning for this placement, and the room it
+  // belongs to. Surfaced on the memory card (judged material). Populated when a
+  // palace is loaded from palace-schema.json; absent for the seed palace.
+  rationale?: string;
+  room?: string;
 }
 
 // The world the memories live inside. Swap splatUrl for a Marble export.

@@ -38,10 +38,17 @@ function deduplicateThree(): Plugin {
   };
 }
 
+// HTTPS (mkcert) is on by default — real WebXR on a headset requires it, and
+// the CA-trust step needs an interactive `sudo` the first time. Set
+// MP_HTTP=1 to skip mkcert and serve plain http on localhost, which browsers
+// still treat as a secure context — enough for the flat-desktop flow and the
+// IWER simulator when you can't run the one-time `mkcert -install`.
+const httpOnly = process.env.MP_HTTP === "1";
+
 export default defineConfig({
   plugins: [
     deduplicateThree(),
-    mkcert(),
+    ...(httpOnly ? [] : [mkcert()]),
     injectIWER({
       device: "metaQuest3",
       activation: "localhost",

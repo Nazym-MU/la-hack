@@ -38,6 +38,7 @@ export function initOverlay(world: World): void {
       <button id="mp-card-close" title="Close">×</button>
       <h3 id="mp-card-title"></h3>
       <p id="mp-card-note"></p>
+      <p id="mp-card-rationale" class="mp-hidden"></p>
       <div id="mp-card-footer">
         <span id="mp-card-date"></span>
         <button id="mp-card-move">move</button>
@@ -79,6 +80,7 @@ export function initOverlay(world: World): void {
   const card = el<HTMLDivElement>("mp-card");
   const cardTitle = el<HTMLHeadingElement>("mp-card-title");
   const cardNote = el<HTMLParagraphElement>("mp-card-note");
+  const cardRationale = el<HTMLParagraphElement>("mp-card-rationale");
   const cardDate = el<HTMLSpanElement>("mp-card-date");
   const backdrop = el<HTMLDivElement>("mp-modal-backdrop");
   const toast = el<HTMLDivElement>("mp-toast");
@@ -101,6 +103,13 @@ export function initOverlay(world: World): void {
     selectedMemory = memory;
     cardTitle.textContent = memory.label;
     cardNote.textContent = memory.note ?? "";
+    // The agent's method-of-loci reasoning — why this memory sits where it does.
+    if (memory.rationale) {
+      cardRationale.textContent = `“${memory.rationale}”`;
+      cardRationale.classList.remove("mp-hidden");
+    } else {
+      cardRationale.classList.add("mp-hidden");
+    }
     cardDate.textContent = memory.dateGenerated
       ? new Date(memory.dateGenerated).toLocaleDateString(undefined, {
           year: "numeric",
@@ -243,6 +252,36 @@ export function initOverlay(world: World): void {
     inImage.value = "";
     imageBtn.textContent = "generate from a photo";
   }
+}
+
+// Top-of-screen room switcher: one chip per room (teleports there on click),
+// plus a small controls hint. Returns setActive(i) to highlight the current
+// room. Renders nothing for a single-room palace.
+export function initRoomNav(
+  titles: string[],
+  onSelect: (index: number) => void,
+): (active: number) => void {
+  if (titles.length <= 1) return () => {};
+
+  const nav = document.createElement("div");
+  nav.id = "mp-roomnav";
+  const chips = titles.map((title, i) => {
+    const chip = document.createElement("button");
+    chip.className = "mp-room-chip";
+    chip.textContent = `${i + 1} · ${title}`;
+    chip.addEventListener("click", () => onSelect(i));
+    nav.appendChild(chip);
+    return chip;
+  });
+  const hint = document.createElement("div");
+  hint.id = "mp-controls-hint";
+  hint.textContent = "walk WASD · look drag · rooms [ ] or 1–9";
+  nav.appendChild(hint);
+  document.body.appendChild(nav);
+
+  return (active: number) => {
+    chips.forEach((c, i) => c.classList.toggle("active", i === active));
+  };
 }
 
 function statusLine(status: GenerationStatus): string {
