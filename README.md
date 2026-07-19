@@ -74,7 +74,13 @@ a few annotated screenshots of the generated room, the manifest JSON, the voice 
 
 <details>
 <summary>Pics/Screenshots of Demo</summary>
-
+  
+<p align="center">
+  <img src="assets/demo-walkthrough4.png" alt="demo-walkthrough">
+</p>
+<p align="center">
+  <img src="assets/demo-walkthrough5.png" alt="demo-walkthrough">
+</p>
 <p align="center">
   <img src="assets/demo-walkthrough1.png" alt="demo-walkthrough">
 </p>
@@ -84,12 +90,7 @@ a few annotated screenshots of the generated room, the manifest JSON, the voice 
 <p align="center">
   <img src="assets/demo-walkthrough3.png" alt="demo-walkthrough">
 </p>
-<p align="center">
-  <img src="assets/demo-walkthrough4.png" alt="demo-walkthrough">
-</p>
-<p align="center">
-  <img src="assets/demo-walkthrough5.png" alt="demo-walkthrough">
-</p>
+
 </details>
 
 # How it works
