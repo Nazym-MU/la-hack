@@ -82,7 +82,7 @@ export function initUploadPanel(): void {
       const res = await fetch("/api/build-palace", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ files, notes: notes.value, provider: "openai" }),
+        body: JSON.stringify({ files, notes: notes.value, provider: "gemini" }),
       });
       const j = await res.json();
       if (!res.ok || !j.jobId) throw new Error(j.error ?? "the build didn't start");

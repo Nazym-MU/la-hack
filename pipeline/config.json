@@ -11,6 +11,7 @@
     "model": "llama-3.3-70b-versatile",
     "visionModel": "meta-llama/llama-4-scout-17b-16e-instruct"
   },
+  "gemini": { "model": "gemini-3.5-flash" },
 
   "preferredRoomCount": 3,
   "roomCountTolerance": 1,

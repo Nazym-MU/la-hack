@@ -201,7 +201,7 @@ app.post("/api/build-palace", async (req, res) => {
 
     const child = spawn(
       process.execPath,
-      [`--env-file-if-exists=${rootEnv}`, "build.js", jobDir, "--provider", provider || "openai", "--generate"],
+      [`--env-file-if-exists=${rootEnv}`, "build.js", jobDir, "--provider", provider || "gemini", "--generate"],
       { cwd: pipelineDir, env: process.env },
     );
     const onData = (buf) => {

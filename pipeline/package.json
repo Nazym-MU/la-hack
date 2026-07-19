@@ -9,6 +9,7 @@
     "build:generate": "node --env-file-if-exists=../.env --env-file-if-exists=.env build.js --generate"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.70.0"
+    "@anthropic-ai/sdk": "^0.70.0",
+    "sharp": "^0.35.3"
   }
 }

@@ -1,5 +1,6 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import sharp from "sharp";
 
 // Read an upload folder into a flat list of items the agent can reason over.
 // Content-agnostic: any folder works, no filenames are special-cased.
@@ -7,16 +8,15 @@ import path from "node:path";
 // item = { kind: "text" | "image", name, relPath, text? , base64?, mediaType? }
 
 const TEXT_EXTS = new Set([".txt", ".md", ".markdown", ".text", ".rtf", ".csv", ".json"]);
-const IMAGE_EXTS = new Map([
-  [".jpg", "image/jpeg"],
-  [".jpeg", "image/jpeg"],
-  [".png", "image/png"],
-  [".webp", "image/webp"],
-  [".gif", "image/gif"],
-]);
+const IMAGE_EXTS = new Set([".jpg", ".jpeg", ".png", ".webp", ".gif"]);
 
-// Claude/Gemini vision limits: skip images that are too large to send cheaply.
-const MAX_IMAGE_BYTES = 4.5 * 1024 * 1024;
+// Every image is downscaled + recompressed before it's sent to any vision
+// model. This keeps per-image size predictable (a few hundred KB) regardless
+// of source phone-camera resolution, which matters most for providers like
+// Groq that reject the whole request (413) once the combined base64 payload
+// of several full-res photos crosses their body-size limit.
+const MAX_IMAGE_DIM = 1568; // long edge in px; matches Claude's own vision cap
+const IMAGE_JPEG_QUALITY = 82;
 const MAX_TEXT_CHARS = 8000;
 
 export async function ingestFolder(root) {
@@ -53,16 +53,23 @@ async function walk(dir, root, out) {
     } else if (IMAGE_EXTS.has(ext)) {
       const buf = await fs.readFile(full).catch(() => null);
       if (!buf) continue;
-      if (buf.byteLength > MAX_IMAGE_BYTES) {
-        console.warn(`[ingest] skipping large image (${(buf.byteLength / 1e6).toFixed(1)}MB): ${relPath}`);
+      let resized;
+      try {
+        resized = await sharp(buf)
+          .rotate() // respect EXIF orientation before dropping the metadata
+          .resize({ width: MAX_IMAGE_DIM, height: MAX_IMAGE_DIM, fit: "inside", withoutEnlargement: true })
+          .jpeg({ quality: IMAGE_JPEG_QUALITY })
+          .toBuffer();
+      } catch (err) {
+        console.warn(`[ingest] skipping unreadable image: ${relPath} (${err.message})`);
         continue;
       }
       out.push({
         kind: "image",
         name: entry.name,
         relPath,
-        base64: buf.toString("base64"),
-        mediaType: IMAGE_EXTS.get(ext),
+        base64: resized.toString("base64"),
+        mediaType: "image/jpeg",
       });
     }
     // Everything else (video, audio, unknown) is ignored for now.

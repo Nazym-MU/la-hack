@@ -42,6 +42,7 @@ export async function runAgent({ items, config, provider }) {
     modelLabel = items.some((it) => it.kind === "image") ? oa.visionModel : oa.model;
   } else if (chosen === "gemini") {
     raw = await runGemini({ items, config, system, task });
+    modelLabel = process.env.GEMINI_MODEL || config.gemini?.model || "gemini-3.5-flash";
   } else if (chosen === "mock") {
     raw = runMock({ items, config });
   } else {
@@ -210,15 +211,72 @@ function parseLooseJson(s) {
 }
 
 // ---------------------------------------------------------------------------
-// Gemini — seam left for the teammate who has that key. Same contract: return
-// a raw object matching PALACE_DRAFT_SCHEMA. Wire via the Gemini SDK's
-// responseSchema (structured output) using the same `system` + `task` + items.
+// Gemini — REST call to generateContent with structured output (responseSchema)
+// and images attached as inlineData. No SDK dependency, same pattern as the
+// OpenAI-compatible path above.
 // ---------------------------------------------------------------------------
-async function runGemini() {
-  throw new Error(
-    "Gemini provider not wired yet — use --provider claude (default) or --provider mock. " +
-      "The seam is runGemini() in pipeline/llm.js; mirror runClaude with the Gemini SDK's responseSchema.",
+async function runGemini({ items, config, system, task }) {
+  const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+  if (!apiKey) {
+    throw new Error(
+      "GEMINI_API_KEY is not set. Get a free key from aistudio.google.com/apikey and put it in " +
+        ".env (root or pipeline/), or run with --provider mock.",
+    );
+  }
+  const model = process.env.GEMINI_MODEL || config.gemini?.model || "gemini-3.5-flash";
+
+  const parts = [{ text: task + digestItems(items) }];
+  for (const it of items) {
+    if (it.kind === "image") {
+      parts.push({ inlineData: { mimeType: it.mediaType, data: it.base64 } });
+    }
+  }
+
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: system }] },
+        contents: [{ role: "user", parts }],
+        generationConfig: {
+          responseMimeType: "application/json",
+          responseSchema: toGeminiSchema(PALACE_DRAFT_SCHEMA),
+        },
+      }),
+    },
   );
+  const text = await res.text();
+  if (!res.ok) throw new Error(`Gemini endpoint ${res.status}: ${text.slice(0, 400)}`);
+
+  let payload;
+  try {
+    payload = JSON.parse(text);
+  } catch {
+    throw new Error("Gemini did not return JSON. First 400 chars:\n" + text.slice(0, 400));
+  }
+  const candidate = payload.candidates?.[0];
+  if (!candidate) throw new Error("Gemini returned no candidates: " + text.slice(0, 400));
+  if (candidate.finishReason && candidate.finishReason !== "STOP") {
+    throw new Error(`Gemini declined or truncated the request (finishReason: ${candidate.finishReason}).`);
+  }
+  const out = (candidate.content?.parts ?? []).map((p) => p.text ?? "").join("");
+  try {
+    return JSON.parse(out);
+  } catch {
+    throw new Error("Gemini did not return valid JSON. First 400 chars:\n" + out.slice(0, 400));
+  }
+}
+
+// Gemini's responseSchema is an OpenAPI-3.0 subset: no additionalProperties.
+function toGeminiSchema(schema) {
+  if (Array.isArray(schema)) return schema.map(toGeminiSchema);
+  if (schema && typeof schema === "object") {
+    const { additionalProperties, ...rest } = schema;
+    return Object.fromEntries(Object.entries(rest).map(([k, v]) => [k, toGeminiSchema(v)]));
+  }
+  return schema;
 }
 
 // ---------------------------------------------------------------------------
